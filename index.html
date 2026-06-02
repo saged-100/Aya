@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام إدارة سنتر اللغة العربية - النسخة المتصلة بالكامل</title>
+  <title>نظام إدارة مؤسسة آية - النسخة السحابية المكتملة</title>
   
   <!-- تحميل Tailwind CSS للمظهر الاحترافي المتناسق مع الهواتف والكمبيوتر -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght=400;500;700&display=swap');
     body {
       font-family: 'Tajawal', sans-serif;
       background-color: #0f0f11;
@@ -52,7 +52,7 @@
     </div>
     <div class="text-center">
       <h3 class="text-lg font-bold text-white">جاري الاتصال السحابي الآمن</h3>
-      <p class="text-xs text-gray-400 mt-1">جلب ومزامنة قواعد بيانات السنتر من Google Sheets...</p>
+      <p class="text-xs text-gray-400 mt-1">جلب ومزامنة قواعد بيانات مؤسسة آية من Google Sheets...</p>
     </div>
   </div>
 
@@ -67,8 +67,8 @@
         <div class="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-500/20 shadow-lg shadow-emerald-500/5">
           <i class="ti ti-school text-4xl"></i>
         </div>
-        <h1 class="text-2xl font-bold text-white tracking-wide">سنتر اللغة العربية</h1>
-        <p class="text-xs text-emerald-500/80 font-medium mt-1">بوابة الإشراف والمتابعة الأكاديمية</p>
+        <h1 class="text-2xl font-bold text-white tracking-wide">مؤسسة آية</h1>
+        <p class="text-xs text-emerald-500/80 font-medium mt-1">بوابة الإشراف والمتابعة الأكاديمية والمدرسية</p>
       </div>
 
       <div class="w-full bg-[#1b1b1f] border border-gray-800/80 rounded-3xl p-6 flex flex-col gap-4 shadow-xl">
@@ -78,7 +78,7 @@
             <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-500">
               <i class="ti ti-user text-base"></i>
             </span>
-            <input type="text" id="inp-user" class="w-full bg-[#232329] border border-gray-800 rounded-2xl pr-10 pl-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors" placeholder="ادخل اسم المستخدم">
+            <input type="text" id="inp-user" class="w-full bg-[#232329] border border-gray-800 rounded-2xl pr-10 pl-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors" placeholder="sago">
           </div>
         </div>
         
@@ -116,7 +116,7 @@
             <div id="user-display-name" class="text-sm font-bold text-white">تحميل...</div>
             <div id="user-display-role" class="text-[10px] text-gray-400 flex items-center gap-1 mt-0.5">
               <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span id="role-text">المشرف الفني</span>
+              <span id="role-text">IT Manager</span>
             </div>
           </div>
         </div>
@@ -145,10 +145,10 @@
 
   <!-- ===================== محرك الجافا سكريبت والمحاكاة الذكية المترابطة سحابياً ===================== -->
   <script>
-    // الرابط النهائي والفعال الذي تم نشره من قبلك على Google Apps Script الخاص بك
+    // الرابط السحابي الخاص بالـ Web App المنشور من شيت جوجل لربط مؤسسة آية
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwiRsFNS9sHxBw6LaLgv1PjvMgQLArmxLwBGiJ6c7QQxpnfFD0JwhOQkuyE0S1a1rj7/exec"; 
 
-    // قاعدة بيانات المحاكي المحلي الاحتياطية (خالية تماماً من علامات التعليق الخاطئة)
+    // قاعدة بيانات المحاكاة الذكية والاحتياطية مع مسميات الأدوار الإنجليزية الجديدة للمؤسسة
     const DB_EMULATOR = {
       settings: {
         price: 400,
@@ -156,28 +156,21 @@
         subjects: ['نحو', 'نصوص', 'أدب']
       },
       users: [
-        {name: 'المهندس ساجد', phone: '01000000000', role: 'المشرف الفني', username: 'sago', password: 'sagod'}
+        {name: 'المهندس ساجد', phone: '01000000000', role: 'IT Manager', username: 'sago', password: 'sagod'}
       ],
       students: [
-        {id: 'St501', name: 'أحمد محمود علي', phone: '01012345678', parentPhone: '01098765432', teacher: 'أ. خالد عمر', hwHistory: {}, attHistory: {}, examTeacher: 41, examManager: 45, paid: true},
-        {id: 'St502', name: 'ريم طارق محمود', phone: '01567890123', parentPhone: '01556789012', teacher: 'أ. منى سامي', hwHistory: {}, attHistory: {}, examTeacher: 44, examManager: 46, paid: true},
-        {id: 'St503', name: 'عمر حسام الدين', phone: '01456789012', parentPhone: '01454321098', teacher: 'أ. منى سامي', hwHistory: {}, attHistory: {}, examTeacher: 37, examManager: 35, paid: false},
-        {id: 'St504', name: 'فاطمة إبراهيم حسن', phone: '01123456789', parentPhone: '01187654321', teacher: 'أ. خالد عمر', hwHistory: {}, attHistory: {}, examTeacher: 48, examManager: 49, paid: true},
-        {id: 'St505', name: 'محمد سامي رضا', phone: '01234567890', parentPhone: '01276543210', teacher: 'أ. خالد عمر', hwHistory: {}, attHistory: {}, examTeacher: 30, examManager: 32, paid: false},
-        {id: 'St506', name: 'نور عبدالله سيد', phone: '01345678901', parentPhone: '01365432109', teacher: 'أ. منى سامي', hwHistory: {}, attHistory: {}, examTeacher: 49, examManager: 48, paid: true}
+        {id: 'St501', name: 'أحمد محمود علي', phone: '01012345678', parentPhone: '01098765432', teacher: 'أ. خالد عمر', hwHistory: {}, attHistory: {}, examTeacher: 41, examManager: 45, paid: true}
       ],
       monthBlocks: [
-        {material: 'اللغة العربية', month: 'يونيو 2026', date: '2026-06-06', task: 'حل قطعة النحو ومراجعة نص غربه وحنين'},
-        {material: 'اللغة العربية', month: 'يونيو 2026', date: '2026-06-08', task: 'حفظ أول 5 أبيات من مدرسة الإحياء والبعث'},
-        {material: 'اللغة العربية', month: 'يونيو 2026', date: '2026-06-10', task: 'مراجعة أسلوب الشرط وحل تدريبات ص 40'}
+        {material: 'مؤسسة آية', month: 'يونيو 2026', date: '2026-06-06', task: 'حل التكليف الأول ومراجعة المحاضرة السابقة'}
       ],
       userRoles: {
-        'المشرف الفني': ['stats', 'prices', 'users', 'students', 'exams', 'blocks', 'payments', 'attendance', 'grades', 'homework'],
-        'صاحب السنتر': ['stats', 'prices', 'users', 'students'],
-        'مدير السنتر': ['stats', 'exams', 'students'],
-        'سكرتارية': ['stats', 'blocks', 'payments', 'students'],
-        'مدرس': ['attendance', 'grades', 'homework', 'students'],
-        'ولي أمر': ['child_status']
+        'IT Manager': ['stats', 'prices', 'users', 'students', 'exams', 'blocks', 'payments', 'attendance', 'grades', 'homework'],
+        'Owner': ['stats', 'prices', 'users', 'students'],
+        'Manager': ['stats', 'exams', 'students'],
+        'Admin': ['stats', 'blocks', 'payments', 'students', 'users'],
+        'Teacher': ['attendance', 'grades', 'homework', 'students'],
+        'Parent': ['child_status']
       }
     };
 
@@ -253,6 +246,8 @@
               };
             });
             DB_EMULATOR.students = parsedStudents;
+          } else {
+            DB_EMULATOR.students = [];
           }
           if (result.data.Monthly_Blocks && result.data.Monthly_Blocks.length > 0) {
             DB_EMULATOR.monthBlocks = result.data.Monthly_Blocks.map(b => ({
@@ -263,14 +258,14 @@
             }));
           }
           sortStudentsAlphabetically();
-          showToast("تم مزامنة شيت جوجل سحابياً بنجاح!", "success");
+          showToast("تم مزامنة البيانات سحابياً بنجاح!", "success");
         } else {
-          showToast("تعذر جلب بيانات الشيت، جاري العمل بالوضع المحلي.", "error");
+          showToast("تعذر جلب البيانات، جاري العمل بالوضع المحلي الاحتياطي.", "error");
           sortStudentsAlphabetically();
         }
       } catch (err) {
-        console.error("فشلت المزامنة المباشرة، جاري العمل بالمحاكي المحلي:", err);
-        showToast("وضعية الطوارئ: تعمل كنسخة محاكية محلية الآن.", "info");
+        console.error("فشلت المزامنة المباشرة:", err);
+        showToast("تنبيه: تعمل كنسخة محاكية محلية الآن.", "info");
         sortStudentsAlphabetically();
       } finally {
         hideGlobalLoader();
@@ -312,7 +307,7 @@
       }
       await syncDataFromSheet();
 
-      // فحص حساب ولي أمر مخصص مولد من البيانات
+      // فحص حساب ولي أمر مخصص مولد من البيانات (Parent)
       let matchingStudent = DB_EMULATOR.students.find(s => {
         const userCode = s.name.split(' ')[0] + '_' + s.phone.slice(-4);
         const passCode = (s.name.split(' ')[0].slice(-3) || s.name.split(' ')[0]) + '_' + s.phone.slice(4, 7);
@@ -320,14 +315,14 @@
       });
 
       if (matchingStudent) {
-        currentUser = { name: "ولي أمر: " + matchingStudent.name, role: 'ولي أمر', student: matchingStudent };
+        currentUser = { name: "ولي أمر: " + matchingStudent.name, role: 'Parent', student: matchingStudent };
         errEl.classList.add('hidden');
         showMainScreen();
         showToast("أهلاً بك يا ولي الأمر المحترم!", "success");
         return;
       }
 
-      // فحص كادر السنتر والمشرف
+      // فحص كادر السنتر والمشرف الفني بقواعد المسميات الجديدة
       const foundUser = DB_EMULATOR.users.find(usr => usr.username === u && usr.password === p);
       if (foundUser) {
         currentUser = foundUser;
@@ -377,17 +372,16 @@
         prices: { label: 'الأسعار', icon: 'ti-tag' },
         users: { label: 'المستخدمين', icon: 'ti-users' },
         students: { label: 'الطلاب', icon: 'ti-school' },
-        exams: { label: 'امتحان المدير', icon: 'ti-pencil' },
+        exams: { label: 'درجة المدير', icon: 'ti-pencil' },
         blocks: { label: 'توليد الشهر', icon: 'ti-calendar-event' },
-        payments: { label: 'تسجيل الدفع', icon: 'ti-cash' },
+        payments: { label: 'الاشتراكات', icon: 'ti-cash' },
         attendance: { label: 'الغياب', icon: 'ti-calendar-check' },
         grades: { label: 'الدرجات', icon: 'ti-edit' },
         homework: { label: 'المطلوب', icon: 'ti-clipboard-list' },
         child_status: { label: 'مستوى ابني', icon: 'ti-user' }
       };
 
-      // تحويل الشريط السفلي إلى سكرول أفقي للمشرف الفني ليتسع لجميع المزايا
-      if (currentUser.role === 'المشرف الفني') {
+      if (currentUser.role === 'IT Manager' || currentUser.role === 'Admin') {
         navEl.className = "bg-[#1b1b1f] border-t border-gray-800/60 flex gap-4 px-4 py-2 sticky bottom-0 z-50 overflow-x-auto justify-start custom-scroll";
       } else {
         navEl.className = "bg-[#1b1b1f] border-t border-gray-800/60 flex justify-around py-2 sticky bottom-0 z-50";
@@ -439,9 +433,9 @@
         container.innerHTML = `
           <div class="grid grid-cols-2 gap-3">
             <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-              <div class="text-[10px] text-gray-400 mb-1">إجمالي الطلاب</div>
+              <div class="text-[10px] text-gray-400 mb-1">إجمالي الطلاب المسجلين</div>
               <div class="text-xl font-bold text-white">${totalStu}</div>
-              <div class="text-[9px] text-gray-500 mt-1">مرتبين أبجدياً بالتسلسل</div>
+              <div class="text-[9px] text-gray-500 mt-1">مؤسسة آية التعليمية</div>
             </div>
             <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
               <div class="text-[10px] text-gray-400 mb-1">الإيرادات المحصلة</div>
@@ -456,7 +450,7 @@
             <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
               <div class="text-[10px] text-gray-400 mb-1">أيام الحصص المتبقية</div>
               <div class="text-xl font-bold text-amber-500">${activeBlock} حصص</div>
-              <div class="text-[9px] text-gray-500 mt-1">المادة: اللغة العربية</div>
+              <div class="text-[9px] text-gray-500 mt-1">مؤسسة آية</div>
             </div>
           </div>
 
@@ -496,7 +490,7 @@
               <span>تعديل سعر الاشتراك الشهري</span>
             </h3>
             <div class="bg-[#232329] rounded-2xl p-4 flex items-center justify-between border border-gray-800/60">
-              <span class="text-xs text-gray-300">السعر الحالي لمادة اللغة العربية:</span>
+              <span class="text-xs text-gray-300">السعر الحالي لمؤسسة آية:</span>
               <strong class="text-lg text-white">${DB_EMULATOR.settings.price} ج.م</strong>
             </div>
             <div>
@@ -531,8 +525,8 @@
                   <div class="text-gray-400">اليوزر: <code class="bg-[#232329] px-2 py-1 rounded-md text-white font-mono">${u.username}</code></div>
                   <div class="text-gray-400">المرور: <code class="bg-[#232329] px-2 py-1 rounded-md text-white font-mono">${u.password}</code></div>
                 </div>
-                ${currentUser.role === 'المشرف الفني' || currentUser.role === 'صاحب السنتر' ? `
-                  <button onclick="confirmDeleteUser(${idx})" class="absolute top-4 left-4 text-xs text-red-400 bg-red-950/20 hover:bg-red-950/40 px-2 py-1 rounded-lg border border-red-900/30">حذف</button>
+                ${currentUser.role === 'IT Manager' || currentUser.role === 'Admin' ? `
+                  <button onclick="confirmDeleteUser('${u.username}')" class="absolute top-4 left-4 text-xs text-red-400 bg-red-950/20 hover:bg-red-950/40 px-2.5 py-1 rounded-lg border border-red-900/30">حذف</button>
                 ` : ''}
               </div>
             `).join('')}
@@ -543,7 +537,7 @@
       else if (activeTab === 'students') {
         container.innerHTML = `
           <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white">بيانات طلاب السنتر (مرتبين أبجدياً)</h3>
+            <h3 class="text-sm font-bold text-white">بيانات طلاب المؤسسة (مرتبين أبجدياً)</h3>
             <button onclick="showAddStudentModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2.5 rounded-xl flex items-center gap-1 shadow-md shadow-emerald-500/5">
               <i class="ti ti-plus"></i>
               <span>إضافة طالب</span>
@@ -557,9 +551,16 @@
                   <div class="text-[10px] text-emerald-400 font-bold mt-1 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block">كود الطالب: ${s.id}</div>
                   <div class="text-[10px] text-gray-400 mt-1">مدرس: <strong class="text-white">${s.teacher}</strong></div>
                 </div>
-                <button onclick="viewStudentProfile('${s.id}')" class="w-10 h-10 rounded-xl bg-[#232329] hover:bg-[#2b2b33] text-gray-300 flex items-center justify-center border border-gray-800/60 transition-colors">
-                  <i class="ti ti-chevron-left text-lg"></i>
-                </button>
+                <div class="flex items-center gap-2">
+                  ${currentUser.role === 'IT Manager' || currentUser.role === 'Admin' ? `
+                    <button onclick="confirmDeleteStudent('${s.name}')" class="text-xs text-red-400 bg-red-950/25 hover:bg-red-950/45 px-2.5 py-2 rounded-xl border border-red-900/30 transition-all">
+                      <i class="ti ti-trash"></i>
+                    </button>
+                  ` : ''}
+                  <button onclick="viewStudentProfile('${s.id}')" class="w-10 h-10 rounded-xl bg-[#232329] hover:bg-[#2b2b33] text-gray-300 flex items-center justify-center border border-gray-800/60 transition-colors">
+                    <i class="ti ti-chevron-left text-lg"></i>
+                  </button>
+                </div>
               </div>
             `).join('')}
           </div>
@@ -571,7 +572,7 @@
           <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-5 flex flex-col gap-4 shadow-lg">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="ti ti-calendar-event text-emerald-500"></i>
-              <span>توليد أيام الحصص (لالسكرتارية فقط)</span>
+              <span>توليد أيام الحصص</span>
             </h3>
             <p class="text-xs text-gray-400">قم بتوليد البلوك الزمني الشهري للحصص لتظهر تلقائياً في جداول الغياب والواجبات اليومية.</p>
             <div>
@@ -607,7 +608,7 @@
                     <span class="text-[9px] text-emerald-400 font-bold mt-1 inline-block">كود: ${s.id}</span>
                   </div>
                   <div class="flex items-center gap-2">
-                    <input type="number" onchange="updateManagerExam('${s.id}', this.value)" class="w-16 bg-[#141416] border border-gray-800 rounded-xl py-2 px-2 text-center text-xs text-white focus:outline-none focus:border-emerald-500 font-bold" value="${s.examManager}">
+                    <input type="number" onchange="updateManagerExam('${s.id}', this.value)" class="w-16 bg-[#141416] border border-gray-800 rounded-xl py-2 px-2 text-center text-xs text-white focus:outline-none focus:border-emerald-500 font-bold" value="${s.examManager || 0}">
                     <span class="text-[10px] text-gray-500">/ 50</span>
                   </div>
                 </div>
@@ -623,8 +624,8 @@
             <div class="flex items-center gap-2 mb-2 border-b border-gray-800 pb-3">
               <i class="ti ti-cash text-emerald-500 text-lg"></i>
               <div>
-                <h3 class="text-sm font-bold text-white">كشف حسابات الدفع المعزول (خزنة السكرتارية)</h3>
-                <p class="text-[10px] text-gray-400 mt-0.5">الملف المالي معزول ومخفي بالكامل عن المعلمين ومساعديهم لضمان السرية.</p>
+                <h3 class="text-sm font-bold text-white">كشف حسابات الدفع المعزول (الخزنة والأمانة)</h3>
+                <p class="text-[10px] text-gray-400 mt-0.5">الملف المالي معزول ومخفي بالكامل عن المعلمين ومساعديهم لضمان السرية والخصوصية.</p>
               </div>
             </div>
             <div class="flex flex-col gap-3 mt-4">
@@ -634,7 +635,7 @@
                     <span class="text-xs font-bold text-white block">${s.name}</span>
                     <span class="text-[10px] text-emerald-400 font-bold mt-1 inline-block">المبلغ المطلوب: ${DB_EMULATOR.settings.price} ج.م</span>
                   </div>
-                  <label class="flex items-center gap-2.5 cursor-pointer bg-[#141416] py-2 px-3.5 rounded-xl border border-gray-800/80 active:scale-95 transition-all">
+                  <label class="flex items-center gap-2.5 cursor-pointer bg-[#141416] py-2 px-3.5 rounded-xl border border-gray-800/80 active:scale-[0.97] transition-all">
                     <input type="checkbox" onchange="togglePaymentStatus('${s.id}', this.checked)" ${s.paid ? 'checked' : ''} class="w-4 h-4 rounded text-emerald-500 bg-[#141416] border-gray-800 focus:ring-0">
                     <span class="text-xs ${s.paid ? 'text-emerald-400' : 'text-amber-500'} font-bold">${s.paid ? 'تم الدفع' : 'معلق'}</span>
                   </label>
@@ -736,7 +737,7 @@
             </div>
             <div>
               <label class="block text-[10px] text-gray-400 mb-2">نص التكليف المطلوب بالتفصيل</label>
-              <textarea id="inp-new-hw" class="w-full bg-[#232329] border border-gray-800 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-emerald-500" rows="3" placeholder="مثال: حل صفحة 40 و 41 بمذكرة النحو وحفظ أول 3 أبيات..."></textarea>
+              <textarea id="inp-new-hw" class="w-full bg-[#232329] border border-gray-800 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-emerald-500" rows="3" placeholder="مثال: مراجعة الوحدة الأولى بمذكرة النحو وحل التدريبات المذكورة..."></textarea>
             </div>
             <button onclick="addNewHomeworkTask()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-xs transition-all shadow-md shadow-emerald-500/10">
               نشر وحفظ التكليف في الشيت
@@ -771,7 +772,7 @@
           </div>
           <div>
             <h2 class="text-base font-bold text-white">${student.name}</h2>
-            <div class="text-[10px] text-emerald-400 font-bold mt-1 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block">كود الطالب الأبجدي: ${student.id}</div>
+            <div class="text-[10px] text-emerald-400 font-bold mt-1 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block">كود الطالب: ${student.id}</div>
           </div>
         </div>
 
@@ -809,20 +810,20 @@
             <div>
               <div class="flex justify-between text-xs mb-1 text-gray-300">
                 <span>اختبار المدرس الشهري</span>
-                <span class="font-bold text-blue-400">${student.examTeacher} من 50</span>
+                <span class="font-bold text-blue-400">${student.examTeacher || 0} من 50</span>
               </div>
               <div class="bg-[#232329] h-2 rounded-full overflow-hidden">
-                <div class="bg-blue-500 h-full" style="width: ${(student.examTeacher / 50) * 100}%"></div>
+                <div class="bg-blue-500 h-full" style="width: ${((student.examTeacher || 0) / 50) * 100}%"></div>
               </div>
             </div>
 
             <div>
               <div class="flex justify-between text-xs mb-1 text-gray-300">
-                <span>اختبار المدير (رقابة السنتر)</span>
-                <span class="font-bold text-purple-400">${student.examManager} من 50</span>
+                <span>اختبار المدير (رقابة الإدارة)</span>
+                <span class="font-bold text-purple-400">${student.examManager || 0} من 50</span>
               </div>
               <div class="bg-[#232329] h-2 rounded-full overflow-hidden">
-                <div class="bg-purple-500 h-full" style="width: ${(student.examManager / 50) * 100}%"></div>
+                <div class="bg-purple-500 h-full" style="width: ${((student.examManager || 0) / 50) * 100}%"></div>
               </div>
             </div>
           </div>
@@ -834,7 +835,7 @@
             <span class="text-xs font-bold">المطلوب والتكليف للمذاكرة بالحصة القادمة:</span>
           </div>
           <p class="text-xs text-gray-300 leading-relaxed">
-            ${DB_EMULATOR.monthBlocks[0] ? DB_EMULATOR.monthBlocks[0].task : 'لم يحدد التكليف بعد من المدرس.'}
+            ${DB_EMULATOR.monthBlocks[0] ? DB_EMULATOR.monthBlocks[0].task : 'لم يحدد التكليف بعد من الإدارة.'}
           </p>
         </div>
       `;
@@ -849,21 +850,51 @@
         showToast("تم تحديث وحفظ السعر بنجاح!", "success");
         switchTab('prices');
       } else {
-        showToast("يرجى إدخال قيمة صحيحة وموجبة لمبلغ الاشتراك.", "error");
+        showToast("يرجى إدخال قيمة صحيحة لمبلغ الاشتراك.", "error");
       }
     }
 
-    function confirmDeleteUser(idx) {
+    function confirmDeleteUser(username) {
       showCustomModal({
         title: "حذف حساب كادر",
-        message: `هل أنت متأكد من رغبتك في حذف حساب "${DB_EMULATOR.users[idx].name}" نهائياً من السنتر؟`,
+        message: `هل أنت متأكد من حذف الحساب "${username}" نهائياً من المؤسسة؟`,
         confirmText: "حذف نهائي",
         confirmColor: "bg-red-500 hover:bg-red-600",
         onConfirm: async () => {
-          showToast("جاري الحذف...", "info");
-          DB_EMULATOR.users.splice(idx, 1);
-          renderContent();
-          showToast("تم حذف الحساب بنجاح من القوائم.", "success");
+          showToast("جاري حذف الحساب سحابياً...", "info");
+          const success = await sendPostToSheet("deleteUser", { username: username });
+          if (success) {
+            DB_EMULATOR.users = DB_EMULATOR.users.filter(u => u.username !== username);
+            showToast("تم حذف الحساب بنجاح وتحديث الشيت.", "success");
+            renderContent();
+          } else {
+            showToast("فشل الحذف الفعلي، جاري إزالته محلياً فقط مؤقتاً.", "info");
+            DB_EMULATOR.users = DB_EMULATOR.users.filter(u => u.username !== username);
+            renderContent();
+          }
+        }
+      });
+    }
+
+    function confirmDeleteStudent(studentName) {
+      showCustomModal({
+        title: "حذف طالب من المؤسسة",
+        message: `هل تريد إزالة الطالب "${studentName}" بالكامل؟ سيقوم الشيت بإعادة ترتيب بقية الطلاب أبجدياً تلقائياً.`,
+        confirmText: "تأكيد الحذف",
+        confirmColor: "bg-red-500 hover:bg-red-600",
+        onConfirm: async () => {
+          showToast("جاري الحذف السحابي...", "info");
+          const success = await sendPostToSheet("deleteStudent", { name: studentName });
+          if (success) {
+            showToast("تم الحذف بنجاح! جاري جلب القائمة المرتبة مجدداً...", "success");
+            await syncDataFromSheet();
+            renderContent();
+          } else {
+            DB_EMULATOR.students = DB_EMULATOR.students.filter(s => s.name !== studentName);
+            sortStudentsAlphabetically();
+            renderContent();
+            showToast("تم الحذف محلياً فقط.", "info");
+          }
         }
       });
     }
@@ -912,8 +943,8 @@
         if (targetBlock) {
           targetBlock.task = tText;
           showToast("جاري حفظ التكليف في قاعدة البيانات...", "info");
-          await sendPostToSheet("updateHomework", { date: tDate, material: "اللغة العربية", task: tText });
-          showToast("تم تحديث الواجب المطلوب بنجاح ونشره بصفحة أولياء الأمور!", "success");
+          await sendPostToSheet("updateHomework", { date: tDate, material: "مؤسسة آية", task: tText });
+          showToast("تم تحديث الواجب بنجاح ونشره بصفحة ولي الأمر!", "success");
           document.getElementById('inp-new-hw').value = '';
           renderContent();
         }
@@ -926,7 +957,6 @@
       const month = document.getElementById('sel-block-month').value;
       const dates = [];
       const d = new Date();
-      // توليد 8 حصص افتراضية كبلوك شهري (سبت، إثنين، أربعاء) لتبسيط الرصد
       for (let i = 0; i < 28; i++) {
         const temp = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
         if (temp.getDay() === 1 || temp.getDay() === 3 || temp.getDay() === 6) {
@@ -934,9 +964,9 @@
           if (dates.length >= 8) break;
         }
       }
-      showToast("جاري توليد أيام البلوك على جوجل شيت...", "info");
-      await sendPostToSheet("generateMonth", { material: "اللغة العربية", month: month, dates: dates });
-      showToast(`تم بنجاح توليد 8 حصص لشهر ${month}!`, "success");
+      showToast("جاري توليد حصص الشهر الجديد سحابياً...", "info");
+      await sendPostToSheet("generateMonth", { material: "مؤسسة آية", month: month, dates: dates });
+      showToast(`تم توليد 8 حصص لشهر ${month}!`, "success");
       await syncDataFromSheet();
     }
 
@@ -947,7 +977,7 @@
         container.innerHTML = `
           <button onclick="switchTab('students')" class="bg-[#232329] text-gray-300 px-3.5 py-2.5 rounded-xl text-xs hover:text-white mb-2 inline-flex items-center gap-1 self-start border border-gray-800/60 active:scale-95 transition-all">
             <i class="ti ti-arrow-right"></i>
-            <span>رجوع لكشف الطلاب أبجدياً</span>
+            <span>رجوع لكشف الطلاب</span>
           </button>
           ${renderStudentView(s)}
         `;
@@ -1004,10 +1034,10 @@
           <div>
             <label class="block text-[10px] text-gray-400 mb-2">الوظيفة / الصلاحية</label>
             <select id="m-urole" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-              <option value="صاحب السنتر">صاحب السنتر</option>
-              <option value="مدير السنتر">مدير السنتر</option>
-              <option value="سكرتارية">سكرتارية</option>
-              <option value="مدرس">مدرس</option>
+              <option value="Admin">Admin (سكرتارية)</option>
+              <option value="Teacher">Teacher (مدرس)</option>
+              <option value="Manager">Manager (مدير)</option>
+              <option value="Owner">Owner (صاحب السنتر)</option>
             </select>
           </div>
           <div class="flex gap-2.5 mt-2">
@@ -1048,7 +1078,7 @@
         <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-3xl p-6 w-full max-w-sm flex flex-col gap-4 shadow-2xl">
           <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-1.5">
             <i class="ti ti-school text-emerald-500"></i>
-            <span>تسجيل طالب جديد بالسنتر</span>
+            <span>تسجيل طالب جديد بالمؤسسة</span>
           </h3>
           <div>
             <label class="block text-[10px] text-gray-400 mb-2">اسم الطالب الكامل</label>
@@ -1086,16 +1116,11 @@
       const t = document.getElementById('m-steacher').value;
 
       if (n && p) {
-        const tempStudent = {
-          name: n,
-          phone: p,
-          parentPhone: pp,
-          teacher: t
-        };
+        const tempStudent = { name: n, phone: p, parentPhone: pp, teacher: t };
 
         showToast("جاري تسجيل الطالب سحابياً...", "info");
         await sendPostToSheet("addStudent", tempStudent);
-        showToast("تم إدخال الطالب بنجاح! جاري تحديث الفرز الأبجدي...", "success");
+        showToast("تم إدخال الطالب بنجاح! جاري تحديث القائمة والترتيب الأبجدي...", "success");
         closeCustomModal();
         await syncDataFromSheet();
         switchTab('students');
@@ -1104,7 +1129,6 @@
       }
     }
 
-    // إطلاق التهيئة المباشرة بعد اكتمال تحميل الصفحة كاملة
     window.onload = function() {
       syncDataFromSheet();
     };
