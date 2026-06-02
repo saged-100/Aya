@@ -1,1137 +1,861 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام إدارة مؤسسة آية - النسخة السحابية المكتملة</title>
-  
-  <!-- تحميل Tailwind CSS للمظهر الاحترافي المتناسق مع الهواتف والكمبيوتر -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- تحميل أيقونات Tabler الممتازة -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-  
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght=400;500;700&display=swap');
-    body {
-      font-family: 'Tajawal', sans-serif;
-      background-color: #0f0f11;
-      color: #E2E8F0;
-    }
-    .custom-scroll::-webkit-scrollbar {
-      width: 6px;
-    }
-    .custom-scroll::-webkit-scrollbar-track {
-      background: #141416;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #10B981;
-      border-radius: 10px;
-    }
-    /* تأثيرات حركية ناعمة للاستجابة السريعة */
-    .fade-enter {
-      opacity: 0;
-      transform: translateY(8px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    .fade-enter-active {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مؤسسة آية التعليمية - نظام الإدارة السحابي المطور</title>
+    <!-- مكتبة الأيقونات والخطوط -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { cairo: ['Cairo', 'sans-serif'] },
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b',
+                        brandAccent: '#8b5cf6',
+                        brandHover: '#7c3aed'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-between pb-24 md:pb-0 custom-scroll relative">
+<body class="min-h-screen flex flex-col justify-between">
 
-  <!-- شاشة التحميل السحابية الممتازة -->
-  <div id="global-loader" class="fixed inset-0 bg-black/90 z-[200] flex flex-col items-center justify-center gap-4 transition-opacity duration-500">
-    <div class="relative w-20 h-20">
-      <div class="absolute inset-0 border-4 border-emerald-500/20 rounded-full"></div>
-      <div class="absolute inset-0 border-4 border-t-emerald-500 rounded-full animate-spin"></div>
-      <div class="absolute inset-0 flex items-center justify-center text-emerald-500">
-        <i class="ti ti-database-share text-3xl animate-pulse"></i>
-      </div>
-    </div>
-    <div class="text-center">
-      <h3 class="text-lg font-bold text-white">جاري الاتصال السحابي الآمن</h3>
-      <p class="text-xs text-gray-400 mt-1">جلب ومزامنة قواعد بيانات مؤسسة آية من Google Sheets...</p>
-    </div>
-  </div>
+    <!-- نظام التنبيهات المنبثقة Toasts -->
+    <div id="toast-container" class="fixed top-5 left-5 z-[100] flex flex-col gap-3"></div>
 
-  <!-- حاوية التنبيهات المنبثقة الطائرة (Toasts) -->
-  <div id="toast-container" class="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-[300] flex flex-col gap-2 w-full max-w-xs px-4 pointer-events-none"></div>
-
-  <div class="w-full max-w-md md:max-w-2xl min-h-screen flex flex-col justify-between bg-[#141416] shadow-2xl relative border-x border-gray-800/40">
-    
-    <!-- ===================== شاشة تسجيل الدخول ===================== -->
-    <div id="screen-login" class="flex-1 flex flex-col justify-center items-center px-6 py-12">
-      <div class="text-center mb-8">
-        <div class="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-500/20 shadow-lg shadow-emerald-500/5">
-          <i class="ti ti-school text-4xl"></i>
-        </div>
-        <h1 class="text-2xl font-bold text-white tracking-wide">مؤسسة آية</h1>
-        <p class="text-xs text-emerald-500/80 font-medium mt-1">بوابة الإشراف والمتابعة الأكاديمية والمدرسية</p>
-      </div>
-
-      <div class="w-full bg-[#1b1b1f] border border-gray-800/80 rounded-3xl p-6 flex flex-col gap-4 shadow-xl">
-        <div>
-          <label class="block text-xs font-bold text-gray-400 mb-2">اسم المستخدم</label>
-          <div class="relative">
-            <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-500">
-              <i class="ti ti-user text-base"></i>
-            </span>
-            <input type="text" id="inp-user" class="w-full bg-[#232329] border border-gray-800 rounded-2xl pr-10 pl-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors" placeholder="sago">
-          </div>
-        </div>
-        
-        <div>
-          <label class="block text-xs font-bold text-gray-400 mb-2">كلمة السر</label>
-          <div class="relative">
-            <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-500">
-              <i class="ti ti-lock text-base"></i>
-            </span>
-            <input type="password" id="inp-pass" class="w-full bg-[#232329] border border-gray-800 rounded-2xl pr-10 pl-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors" placeholder="••••••••">
-          </div>
-        </div>
-
-        <div id="login-error" class="text-xs text-red-500 text-center font-medium hidden">
-          اسم المستخدم أو كلمة السر غير صحيحة! يرجى التحقق وإعادة المحاولة.
-        </div>
-
-        <button onclick="handleLogin()" class="w-full bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white font-bold py-4 rounded-2xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 mt-2">
-          <span>تسجيل دخول سحابي</span>
-          <i class="ti ti-arrow-left text-lg"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- ===================== شاشة التطبيق الداخلية ===================== -->
-    <div id="screen-main" class="hidden flex-1 flex flex-col">
-      
-      <!-- الهيدر العلوي الذكي المتناسق مع الهوية المظلمة -->
-      <div class="bg-[#1b1b1f] border-b border-gray-800/60 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
-        <div class="flex items-center gap-3">
-          <div id="user-avatar" class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold border border-emerald-500/20 shadow-md">
-            م
-          </div>
-          <div>
-            <div id="user-display-name" class="text-sm font-bold text-white">تحميل...</div>
-            <div id="user-display-role" class="text-[10px] text-gray-400 flex items-center gap-1 mt-0.5">
-              <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span id="role-text">IT Manager</span>
-            </div>
-          </div>
-        </div>
-        
-        <button onclick="confirmLogout()" class="w-10 h-10 rounded-xl bg-red-950/20 text-red-400 hover:bg-red-950/40 active:scale-95 flex items-center justify-center transition-all border border-red-900/30">
-          <i class="ti ti-logout text-lg"></i>
-        </button>
-      </div>
-
-      <!-- محتوى الصفحات الديناميكي -->
-      <div id="main-content" class="flex-1 p-4 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-140px)] custom-scroll">
-        <!-- يتم رندرة الصفحات هنا بناءً على دور المستخدم والتبويب النشط -->
-      </div>
-
-      <!-- شريط التنقل السفلي الفخم المتطابق مع صلاحيات الأدوار المعتمدة -->
-      <div id="bottom-navbar" class="bg-[#1b1b1f] border-t border-gray-800/60 flex justify-around py-2 sticky bottom-0 z-50">
-        <!-- يمتلئ ديناميكياً حسب صلاحية المستخدم -->
-      </div>
-    </div>
-
-  </div>
-
-  <div id="modal-container" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center z-[150] p-4">
-    <!-- محتوى المودال يظهر هنا ديناميكياً -->
-  </div>
-
-  <!-- ===================== محرك الجافا سكريبت والمحاكاة الذكية المترابطة سحابياً ===================== -->
-  <script>
-    // الرابط السحابي الخاص بالـ Web App المنشور من شيت جوجل لربط مؤسسة آية
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwiRsFNS9sHxBw6LaLgv1PjvMgQLArmxLwBGiJ6c7QQxpnfFD0JwhOQkuyE0S1a1rj7/exec"; 
-
-    // قاعدة بيانات المحاكاة الذكية والاحتياطية مع مسميات الأدوار الإنجليزية الجديدة للمؤسسة
-    const DB_EMULATOR = {
-      settings: {
-        price: 400,
-        examMax: 50,
-        subjects: ['نحو', 'نصوص', 'أدب']
-      },
-      users: [
-        {name: 'المهندس ساجد', phone: '01000000000', role: 'IT Manager', username: 'sago', password: 'sagod'}
-      ],
-      students: [
-        {id: 'St501', name: 'أحمد محمود علي', phone: '01012345678', parentPhone: '01098765432', teacher: 'أ. خالد عمر', hwHistory: {}, attHistory: {}, examTeacher: 41, examManager: 45, paid: true}
-      ],
-      monthBlocks: [
-        {material: 'مؤسسة آية', month: 'يونيو 2026', date: '2026-06-06', task: 'حل التكليف الأول ومراجعة المحاضرة السابقة'}
-      ],
-      userRoles: {
-        'IT Manager': ['stats', 'prices', 'users', 'students', 'exams', 'blocks', 'payments', 'attendance', 'grades', 'homework'],
-        'Owner': ['stats', 'prices', 'users', 'students'],
-        'Manager': ['stats', 'exams', 'students'],
-        'Admin': ['stats', 'blocks', 'payments', 'students', 'users'],
-        'Teacher': ['attendance', 'grades', 'homework', 'students'],
-        'Parent': ['child_status']
-      }
-    };
-
-    let currentUser = null;
-    let activeTab = '';
-
-    function showToast(message, type = 'success') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `flex items-center gap-2 p-3.5 rounded-2xl text-xs font-bold shadow-lg transition-all transform translate-y-4 opacity-0 border ${
-        type === 'success' 
-          ? 'bg-emerald-950/90 text-emerald-400 border-emerald-500/30' 
-          : type === 'error' 
-          ? 'bg-red-950/90 text-red-400 border-red-500/30' 
-          : 'bg-[#232329]/95 text-blue-400 border-blue-500/20'
-      }`;
-      
-      const icon = type === 'success' ? 'ti-circle-check-filled' : type === 'error' ? 'ti-circle-x-filled' : 'ti-info-circle-filled';
-      toast.innerHTML = `
-        <i class="ti ${icon} text-base shrink-0"></i>
-        <span>${message}</span>
-      `;
-      
-      container.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.classList.remove('translate-y-4', 'opacity-0');
-      }, 50);
-
-      setTimeout(() => {
-        toast.classList.add('translate-y-2', 'opacity-0');
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-
-    function sortStudentsAlphabetically() {
-      DB_EMULATOR.students.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
-      DB_EMULATOR.students.forEach((s, idx) => {
-        s.id = 'St' + (501 + idx);
-        DB_EMULATOR.monthBlocks.forEach(b => {
-          if (s.attHistory[b.date] === undefined) s.attHistory[b.date] = 1;
-          if (s.hwHistory[b.date] === undefined) s.hwHistory[b.date] = { نحو: 8, نصوص: 9, أدب: 8 };
-        });
-      });
-    }
-
-    async function syncDataFromSheet() {
-      if (!WEB_APP_URL) {
-        sortStudentsAlphabetically();
-        hideGlobalLoader();
-        return;
-      }
-      try {
-        const response = await fetch(`${WEB_APP_URL}?action=getInitialData`);
-        const result = await response.json();
-        if (result.status === "success") {
-          if (result.data.Users_Central && result.data.Users_Central.length > 0) {
-            DB_EMULATOR.users = result.data.Users_Central;
-          }
-          if (result.data.Students_Base && result.data.Students_Base.length > 0) {
-            const parsedStudents = result.data.Students_Base.map(s => {
-              return {
-                id: s['كود الطالب'] || '',
-                name: s['اسم الطالب'] || '',
-                phone: String(s['رقم هاتف الطالب'] || ''),
-                parentPhone: String(s['رقم هاتف ولي الأمر'] || ''),
-                teacher: s['المدرس'] || '',
-                hwHistory: JSON.parse(s.hwHistory || '{}'),
-                attHistory: JSON.parse(s.attHistory || '{}'),
-                examTeacher: Number(s.examTeacher || 0),
-                examManager: Number(s.examManager || 0),
-                paid: s.paid === "تم الدفع" || s.paid === true
-              };
-            });
-            DB_EMULATOR.students = parsedStudents;
-          } else {
-            DB_EMULATOR.students = [];
-          }
-          if (result.data.Monthly_Blocks && result.data.Monthly_Blocks.length > 0) {
-            DB_EMULATOR.monthBlocks = result.data.Monthly_Blocks.map(b => ({
-              material: b['المادة'],
-              month: b['الشهر'],
-              date: b['تاريخ الحصة'],
-              task: b['المطلوب/التكليف']
-            }));
-          }
-          sortStudentsAlphabetically();
-          showToast("تم مزامنة البيانات سحابياً بنجاح!", "success");
-        } else {
-          showToast("تعذر جلب البيانات، جاري العمل بالوضع المحلي الاحتياطي.", "error");
-          sortStudentsAlphabetically();
-        }
-      } catch (err) {
-        console.error("فشلت المزامنة المباشرة:", err);
-        showToast("تنبيه: تعمل كنسخة محاكية محلية الآن.", "info");
-        sortStudentsAlphabetically();
-      } finally {
-        hideGlobalLoader();
-      }
-    }
-
-    function hideGlobalLoader() {
-      const loader = document.getElementById('global-loader');
-      if (loader) {
-        loader.classList.add('opacity-0', 'pointer-events-none');
-      }
-    }
-
-    async function sendPostToSheet(action, data) {
-      if (!WEB_APP_URL) return true;
-      try {
-        const response = await fetch(WEB_APP_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: action, data: data }),
-          headers: { "Content-Type": "text/plain" }
-        });
-        const res = await response.json();
-        return res.status === "success";
-      } catch (err) {
-        console.error("فشل التحديث الفعلي في الشيت:", err);
-        showToast("فشلت الكتابة في شيت جوجل سحابياً، حُفِظ محلياً.", "error");
-        return false;
-      }
-    }
-
-    async function handleLogin() {
-      const u = document.getElementById('inp-user').value.trim();
-      const p = document.getElementById('inp-pass').value.trim();
-      const errEl = document.getElementById('login-error');
-
-      const loader = document.getElementById('global-loader');
-      if (loader) {
-        loader.classList.remove('opacity-0', 'pointer-events-none');
-      }
-      await syncDataFromSheet();
-
-      // فحص حساب ولي أمر مخصص مولد من البيانات (Parent)
-      let matchingStudent = DB_EMULATOR.students.find(s => {
-        const userCode = s.name.split(' ')[0] + '_' + s.phone.slice(-4);
-        const passCode = (s.name.split(' ')[0].slice(-3) || s.name.split(' ')[0]) + '_' + s.phone.slice(4, 7);
-        return u === userCode && p === passCode;
-      });
-
-      if (matchingStudent) {
-        currentUser = { name: "ولي أمر: " + matchingStudent.name, role: 'Parent', student: matchingStudent };
-        errEl.classList.add('hidden');
-        showMainScreen();
-        showToast("أهلاً بك يا ولي الأمر المحترم!", "success");
-        return;
-      }
-
-      // فحص كادر السنتر والمشرف الفني بقواعد المسميات الجديدة
-      const foundUser = DB_EMULATOR.users.find(usr => usr.username === u && usr.password === p);
-      if (foundUser) {
-        currentUser = foundUser;
-        errEl.classList.add('hidden');
-        showMainScreen();
-        showToast(`أهلاً بك يا ${currentUser.name} (${currentUser.role})`, "success");
-      } else {
-        errEl.classList.remove('hidden');
-        hideGlobalLoader();
-      }
-    }
-
-    function confirmLogout() {
-      showCustomModal({
-        title: "تسجيل الخروج",
-        message: "هل تريد تسجيل الخروج والعودة لشاشة الدخول؟",
-        confirmText: "خروج",
-        confirmColor: "bg-red-500 hover:bg-red-600",
-        onConfirm: () => {
-          handleLogout();
-        }
-      });
-    }
-
-    function handleLogout() {
-      currentUser = null;
-      document.getElementById('screen-main').classList.add('hidden');
-      document.getElementById('screen-login').classList.remove('hidden');
-      document.getElementById('inp-user').value = '';
-      document.getElementById('inp-pass').value = '';
-    }
-
-    function showMainScreen() {
-      document.getElementById('screen-login').classList.add('hidden');
-      document.getElementById('screen-main').classList.remove('hidden');
-      
-      document.getElementById('user-display-name').textContent = currentUser.name;
-      document.getElementById('user-display-role').textContent = currentUser.role;
-      document.getElementById('user-avatar').textContent = currentUser.name[0];
-
-      const tabs = DB_EMULATOR.userRoles[currentUser.role] || ['stats'];
-      const navEl = document.getElementById('bottom-navbar');
-      navEl.innerHTML = '';
-
-      const tabConfigs = {
-        stats: { label: 'الإحصائيات', icon: 'ti-chart-bar' },
-        prices: { label: 'الأسعار', icon: 'ti-tag' },
-        users: { label: 'المستخدمين', icon: 'ti-users' },
-        students: { label: 'الطلاب', icon: 'ti-school' },
-        exams: { label: 'درجة المدير', icon: 'ti-pencil' },
-        blocks: { label: 'توليد الشهر', icon: 'ti-calendar-event' },
-        payments: { label: 'الاشتراكات', icon: 'ti-cash' },
-        attendance: { label: 'الغياب', icon: 'ti-calendar-check' },
-        grades: { label: 'الدرجات', icon: 'ti-edit' },
-        homework: { label: 'المطلوب', icon: 'ti-clipboard-list' },
-        child_status: { label: 'مستوى ابني', icon: 'ti-user' }
-      };
-
-      if (currentUser.role === 'IT Manager' || currentUser.role === 'Admin') {
-        navEl.className = "bg-[#1b1b1f] border-t border-gray-800/60 flex gap-4 px-4 py-2 sticky bottom-0 z-50 overflow-x-auto justify-start custom-scroll";
-      } else {
-        navEl.className = "bg-[#1b1b1f] border-t border-gray-800/60 flex justify-around py-2 sticky bottom-0 z-50";
-      }
-
-      tabs.forEach((tab, index) => {
-        const config = tabConfigs[tab];
-        if (!config) return;
-        const btn = document.createElement('button');
-        btn.className = `nav-btn shrink-0 flex flex-col items-center justify-center py-1.5 px-3 text-xs ${index === 0 ? 'text-emerald-500 font-bold' : 'text-gray-500 hover:text-white'} transition-all`;
-        btn.id = `btn-tab-${tab}`;
-        btn.onclick = () => switchTab(tab);
-        btn.innerHTML = `
-          <i class="ti ${config.icon} text-lg mb-0.5"></i>
-          <span class="text-[10px]">${config.label}</span>
-        `;
-        navEl.appendChild(btn);
-      });
-
-      switchTab(tabs[0]);
-    }
-
-    function switchTab(tabId) {
-      activeTab = tabId;
-      document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.remove('text-emerald-500', 'font-bold');
-        b.classList.add('text-gray-500');
-      });
-      const activeBtn = document.getElementById(`btn-tab-${tabId}`);
-      if (activeBtn) {
-        activeBtn.classList.add('text-emerald-500', 'font-bold');
-        activeBtn.classList.remove('text-gray-500');
-      }
-
-      renderContent();
-    }
-
-    function renderContent() {
-      const container = document.getElementById('main-content');
-      container.innerHTML = '';
-      container.className = "flex-1 p-4 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-140px)] custom-scroll fade-enter fade-enter-active";
-
-      if (activeTab === 'stats') {
-        const totalStu = DB_EMULATOR.students.length;
-        const paidStu = DB_EMULATOR.students.filter(s => s.paid).length;
-        const totalRev = paidStu * DB_EMULATOR.settings.price;
-        const activeBlock = DB_EMULATOR.monthBlocks.length;
-        
-        container.innerHTML = `
-          <div class="grid grid-cols-2 gap-3">
-            <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-              <div class="text-[10px] text-gray-400 mb-1">إجمالي الطلاب المسجلين</div>
-              <div class="text-xl font-bold text-white">${totalStu}</div>
-              <div class="text-[9px] text-gray-500 mt-1">مؤسسة آية التعليمية</div>
-            </div>
-            <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-              <div class="text-[10px] text-gray-400 mb-1">الإيرادات المحصلة</div>
-              <div class="text-xl font-bold text-emerald-400">${totalRev.toLocaleString()} ج.م</div>
-              <div class="text-[9px] text-gray-500 mt-1">من أصل ${(totalStu * DB_EMULATOR.settings.price).toLocaleString()} ج.م</div>
-            </div>
-            <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-              <div class="text-[10px] text-gray-400 mb-1">حالة الحضور العام</div>
-              <div class="text-xl font-bold text-blue-400">84%</div>
-              <div class="text-[9px] text-gray-500 mt-1">متوسط الشهر الحالي</div>
-            </div>
-            <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-              <div class="text-[10px] text-gray-400 mb-1">أيام الحصص المتبقية</div>
-              <div class="text-xl font-bold text-amber-500">${activeBlock} حصص</div>
-              <div class="text-[9px] text-gray-500 mt-1">مؤسسة آية</div>
-            </div>
-          </div>
-
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-            <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
-              <i class="ti ti-chart-bar text-emerald-500"></i>
-              <span>مستوى الطلاب في الواجبات (مرتبين أبجدياً)</span>
-            </h3>
-            <div class="flex flex-col gap-3">
-              ${DB_EMULATOR.students.map(s => {
-                let sum = 0, count = 0;
-                Object.values(s.hwHistory).forEach(h => {
-                  sum += ((Number(h.نحو) || 0) + (Number(h.نصوص) || 0) + (Number(h.أدب) || 0));
-                  count += 30;
-                });
-                const pct = count ? Math.round((sum / count) * 100) : 80;
-                return `
-                  <div class="flex items-center justify-between text-xs">
-                    <span class="w-28 text-gray-300 truncate font-medium">${s.name} <span class="text-[9px] text-gray-500">${s.id}</span></span>
-                    <div class="flex-1 bg-[#232329] h-2 rounded-full mx-3 overflow-hidden">
-                      <div class="bg-emerald-500 h-full" style="width: ${pct}%"></div>
-                    </div>
-                    <span class="text-gray-400 font-bold w-8 text-left">${pct}%</span>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      else if (activeTab === 'prices') {
-        container.innerHTML = `
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-5 flex flex-col gap-4 shadow-lg">
-            <h3 class="text-sm font-bold text-emerald-500 flex items-center gap-2">
-              <i class="ti ti-tag"></i>
-              <span>تعديل سعر الاشتراك الشهري</span>
-            </h3>
-            <div class="bg-[#232329] rounded-2xl p-4 flex items-center justify-between border border-gray-800/60">
-              <span class="text-xs text-gray-300">السعر الحالي لمؤسسة آية:</span>
-              <strong class="text-lg text-white">${DB_EMULATOR.settings.price} ج.م</strong>
-            </div>
-            <div>
-              <label class="block text-xs text-gray-400 mb-2">تحديد السعر الجديد</label>
-              <input type="number" id="inp-new-price" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-500" value="${DB_EMULATOR.settings.price}">
-            </div>
-            <button onclick="updatePrice()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-sm transition-all shadow-md shadow-emerald-500/10">
-              تحديث وحفظ السعر بالخلفية
-            </button>
-          </div>
-        `;
-      }
-
-      else if (activeTab === 'users') {
-        container.innerHTML = `
-          <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white">إدارة حسابات المستخدمين والكوادر</h3>
-            <button onclick="showAddUserModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2.5 rounded-xl flex items-center gap-1 shadow-md shadow-emerald-500/5">
-              <i class="ti ti-plus"></i>
-              <span>إضافة مستخدم</span>
-            </button>
-          </div>
-          <div class="flex flex-col gap-3 mt-1">
-            ${DB_EMULATOR.users.map((u, idx) => `
-              <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 flex flex-col gap-2 relative shadow-lg">
-                <div class="flex items-center justify-between">
-                  <span class="text-sm font-bold text-white">${u.name}</span>
-                  <span class="px-2 py-1 text-[9px] bg-[#232329] rounded-lg text-emerald-400 font-bold border border-emerald-500/10">${u.role}</span>
+    <!-- شاشة تسجيل الدخول الأنيقة والخالية من التوجيهات -->
+    <div id="login-screen" class="flex-grow flex items-center justify-center px-4">
+        <div class="bg-cardBg p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700/50">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-brandAccent/10 text-brandAccent rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="ti ti-school text-3xl"></i>
                 </div>
-                <div class="text-xs text-gray-400">رقم الموبايل: <strong class="text-white">${u.phone}</strong></div>
-                <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-gray-800/40 text-[11px]">
-                  <div class="text-gray-400">اليوزر: <code class="bg-[#232329] px-2 py-1 rounded-md text-white font-mono">${u.username}</code></div>
-                  <div class="text-gray-400">المرور: <code class="bg-[#232329] px-2 py-1 rounded-md text-white font-mono">${u.password}</code></div>
-                </div>
-                ${currentUser.role === 'IT Manager' || currentUser.role === 'Admin' ? `
-                  <button onclick="confirmDeleteUser('${u.username}')" class="absolute top-4 left-4 text-xs text-red-400 bg-red-950/20 hover:bg-red-950/40 px-2.5 py-1 rounded-lg border border-red-900/30">حذف</button>
-                ` : ''}
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-
-      else if (activeTab === 'students') {
-        container.innerHTML = `
-          <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white">بيانات طلاب المؤسسة (مرتبين أبجدياً)</h3>
-            <button onclick="showAddStudentModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2.5 rounded-xl flex items-center gap-1 shadow-md shadow-emerald-500/5">
-              <i class="ti ti-plus"></i>
-              <span>إضافة طالب</span>
-            </button>
-          </div>
-          <div class="flex flex-col gap-3 mt-1">
-            ${DB_EMULATOR.students.map((s, idx) => `
-              <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 flex items-center justify-between shadow-lg">
+                <h1 class="text-3xl font-bold text-white mb-1">مؤسسة آية</h1>
+                <p class="text-slate-400 text-sm">نظام الإدارة الشامل والرقابة الأكاديمية الصارمة</p>
+            </div>
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-6">
                 <div>
-                  <div class="text-sm font-bold text-white">${s.name}</div>
-                  <div class="text-[10px] text-emerald-400 font-bold mt-1 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block">كود الطالب: ${s.id}</div>
-                  <div class="text-[10px] text-gray-400 mt-1">مدرس: <strong class="text-white">${s.teacher}</strong></div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">اسم المستخدم</label>
+                    <input type="text" id="username" required class="w-full bg-darkBg border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brandAccent transition">
                 </div>
-                <div class="flex items-center gap-2">
-                  ${currentUser.role === 'IT Manager' || currentUser.role === 'Admin' ? `
-                    <button onclick="confirmDeleteStudent('${s.name}')" class="text-xs text-red-400 bg-red-950/25 hover:bg-red-950/45 px-2.5 py-2 rounded-xl border border-red-900/30 transition-all">
-                      <i class="ti ti-trash"></i>
-                    </button>
-                  ` : ''}
-                  <button onclick="viewStudentProfile('${s.id}')" class="w-10 h-10 rounded-xl bg-[#232329] hover:bg-[#2b2b33] text-gray-300 flex items-center justify-center border border-gray-800/60 transition-colors">
-                    <i class="ti ti-chevron-left text-lg"></i>
-                  </button>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">كلمة المرور</label>
+                    <input type="password" id="password" required class="w-full bg-darkBg border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brandAccent transition">
                 </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
+                <button type="submit" class="w-full bg-brandAccent hover:bg-brandHover text-white py-3 rounded-xl font-semibold transition shadow-lg shadow-brandAccent/20">تسجيل الدخول</button>
+            </form>
+        </div>
+    </div>
 
-      else if (activeTab === 'blocks') {
-        container.innerHTML = `
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-5 flex flex-col gap-4 shadow-lg">
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="ti ti-calendar-event text-emerald-500"></i>
-              <span>توليد أيام الحصص</span>
-            </h3>
-            <p class="text-xs text-gray-400">قم بتوليد البلوك الزمني الشهري للحصص لتظهر تلقائياً في جداول الغياب والواجبات اليومية.</p>
-            <div>
-              <label class="block text-[10px] text-gray-400 mb-2">اختر الشهر الجديد</label>
-              <select id="sel-block-month" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3.5 py-3 text-xs text-white focus:outline-none focus:border-emerald-500">
-                <option value="يونيو 2026">يونيو 2026</option>
-                <option value="يوليو 2026">يوليو 2026</option>
-                <option value="أغسطس 2026">أغسطس 2026</option>
-              </select>
+    <!-- لوحة التحكم الرئيسية للنظام السحابي المباشر -->
+    <div id="main-dashboard" class="hidden flex-grow flex flex-col">
+        <!-- شريط الرأس المتطور -->
+        <header class="bg-cardBg border-b border-slate-700 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-brandAccent/20 text-brandAccent p-2 rounded-xl font-bold flex items-center justify-center w-10 h-10">
+                    <i class="ti ti-award text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white">مؤسسة آية التعليمية</h2>
+                    <p class="text-xs text-slate-400">مرحباً بك: <span id="user-display-name" class="text-brandAccent font-bold"></span> (<span id="user-role-name" class="text-emerald-400 font-semibold"></span>)</p>
+                </div>
             </div>
-            <button onclick="generateCustomMonth()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-xs transition-all shadow-md shadow-emerald-500/10">
-              توليد وحفظ الأيام تلقائياً في الشيت
+            <button onclick="logout()" class="bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-2">
+                <i class="ti ti-logout text-base"></i>
+                <span>تسجيل الخروج</span>
             </button>
-          </div>
-        `;
-      }
+        </header>
 
-      else if (activeTab === 'exams') {
-        container.innerHTML = `
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-            <div class="flex items-center gap-2 mb-2 border-b border-gray-800 pb-3">
-              <i class="ti ti-pencil text-emerald-500 text-lg"></i>
-              <div>
-                <h3 class="text-sm font-bold text-white">رصد وتعديل درجة اختبار المدير الشهري</h3>
-                <p class="text-[10px] text-gray-400 mt-0.5">رصد الامتحان المركزي الذي يتم مرة واحدة في نهاية الشهر.</p>
-              </div>
-            </div>
-            <div class="flex flex-col gap-3 mt-4">
-              ${DB_EMULATOR.students.map((s, idx) => `
-                <div class="flex items-center justify-between bg-[#232329]/50 p-3.5 rounded-2xl border border-gray-800/60">
-                  <div>
-                    <span class="text-xs font-bold text-white block">${s.name}</span>
-                    <span class="text-[9px] text-emerald-400 font-bold mt-1 inline-block">كود: ${s.id}</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <input type="number" onchange="updateManagerExam('${s.id}', this.value)" class="w-16 bg-[#141416] border border-gray-800 rounded-xl py-2 px-2 text-center text-xs text-white focus:outline-none focus:border-emerald-500 font-bold" value="${s.examManager || 0}">
-                    <span class="text-[10px] text-gray-500">/ 50</span>
-                  </div>
+        <!-- محتوى التطبيق وقائمة التنقل -->
+        <div class="flex-grow flex flex-col md:flex-row">
+            <!-- القائمة الجانبية -->
+            <aside class="w-full md:w-64 bg-cardBg border-l border-slate-700/60 p-4 space-y-1" id="sidebar-menu">
+                <!-- يتم توليدها ديناميكياً لتأمين الوصول للتبويبات -->
+            </aside>
+
+            <!-- منطقة العرض الرئيسية -->
+            <main class="flex-grow p-6 custom-scroll overflow-y-auto max-h-[calc(100vh-80px)]">
+                <div id="tab-content" class="space-y-6">
+                    <!-- المحتوى النشط هنا -->
                 </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      else if (activeTab === 'payments') {
-        container.innerHTML = `
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-            <div class="flex items-center gap-2 mb-2 border-b border-gray-800 pb-3">
-              <i class="ti ti-cash text-emerald-500 text-lg"></i>
-              <div>
-                <h3 class="text-sm font-bold text-white">كشف حسابات الدفع المعزول (الخزنة والأمانة)</h3>
-                <p class="text-[10px] text-gray-400 mt-0.5">الملف المالي معزول ومخفي بالكامل عن المعلمين ومساعديهم لضمان السرية والخصوصية.</p>
-              </div>
-            </div>
-            <div class="flex flex-col gap-3 mt-4">
-              ${DB_EMULATOR.students.map((s, idx) => `
-                <div class="flex items-center justify-between bg-[#232329]/50 p-3.5 rounded-2xl border border-gray-800/60">
-                  <div>
-                    <span class="text-xs font-bold text-white block">${s.name}</span>
-                    <span class="text-[10px] text-emerald-400 font-bold mt-1 inline-block">المبلغ المطلوب: ${DB_EMULATOR.settings.price} ج.م</span>
-                  </div>
-                  <label class="flex items-center gap-2.5 cursor-pointer bg-[#141416] py-2 px-3.5 rounded-xl border border-gray-800/80 active:scale-[0.97] transition-all">
-                    <input type="checkbox" onchange="togglePaymentStatus('${s.id}', this.checked)" ${s.paid ? 'checked' : ''} class="w-4 h-4 rounded text-emerald-500 bg-[#141416] border-gray-800 focus:ring-0">
-                    <span class="text-xs ${s.paid ? 'text-emerald-400' : 'text-amber-500'} font-bold">${s.paid ? 'تم الدفع' : 'معلق'}</span>
-                  </label>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      else if (activeTab === 'attendance') {
-        container.innerHTML = `
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-            <h3 class="text-sm font-bold text-white mb-2">رصد الحضور والغياب اليومي للمجموعات</h3>
-            <p class="text-[11px] text-gray-400 mb-4">يرصد الحضور والغياب يومياً ومباشرة بربطها بالتواريخ الحية المولدة من السكرتير.</p>
-            <div class="mb-4">
-              <label class="block text-[10px] text-gray-400 mb-1.5">اختر تاريخ الحصة الحالية</label>
-              <select id="sel-attendance-date" onchange="renderContent()" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-                ${DB_EMULATOR.monthBlocks.map(b => `<option value="${b.date}">${b.date}</option>`).join('')}
-              </select>
-            </div>
-            <div class="flex flex-col gap-3">
-              ${DB_EMULATOR.students.map((s, idx) => {
-                const targetDate = document.getElementById('sel-attendance-date')?.value || DB_EMULATOR.monthBlocks[0]?.date;
-                const isPresent = s.attHistory[targetDate] === 1;
-                return `
-                  <div class="flex items-center justify-between bg-[#232329]/50 p-3.5 rounded-2xl border border-gray-800/60">
-                    <div>
-                      <span class="text-xs font-bold text-white block">${s.name}</span>
-                      <span class="text-[9px] text-gray-500 block mt-1">كود: ${s.id}</span>
-                    </div>
-                    <button onclick="toggleDayAttendanceHistory('${s.id}', '${targetDate}')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all ${isPresent ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-500/10' : 'bg-red-950/40 text-red-400 border border-red-500/10'}">
-                      ${isPresent ? 'حاضر' : 'غائب'}
-                    </button>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      else if (activeTab === 'grades') {
-        container.innerHTML = `
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-            <h3 class="text-sm font-bold text-white mb-2">رصد درجات الواجبات اليومية التفصيلية</h3>
-            <p class="text-[11px] text-gray-400 mb-4">رصد درجات أجزاء الامتحان والواجب اليومي لكل طالب تزامناً مع تاريخ الحصة الفعلي.</p>
-            <div class="mb-4">
-              <label class="block text-[10px] text-gray-400 mb-1.5">اختر تاريخ الحصة الحالية</label>
-              <select id="sel-grades-date" onchange="renderContent()" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-                ${DB_EMULATOR.monthBlocks.map(b => `<option value="${b.date}">${b.date}</option>`).join('')}
-              </select>
-            </div>
-            <div class="flex flex-col gap-4">
-              ${DB_EMULATOR.students.map((s, idx) => {
-                const targetDate = document.getElementById('sel-grades-date')?.value || DB_EMULATOR.monthBlocks[0]?.date;
-                const hw = s.hwHistory[targetDate] || { نحو: 0, نصوص: 0, أدب: 0 };
-                return `
-                  <div class="bg-[#232329]/50 p-4 rounded-2xl border border-gray-800/60 flex flex-col gap-3.5">
-                    <div class="flex items-center justify-between border-b border-gray-800/40 pb-2">
-                      <span class="text-xs font-bold text-white">${s.name}</span>
-                      <span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">المجموع: ${(Number(hw.نحو) || 0) + (Number(hw.نصوص) || 0) + (Number(hw.أدب) || 0)} / 30</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2">
-                      <div>
-                        <label class="block text-[9px] text-gray-400 mb-1">واجب النحو</label>
-                        <input type="number" onchange="updateDailyQuiz('${s.id}', '${targetDate}', 'نحو', this.value)" class="w-full bg-[#141416] border border-gray-800 rounded-xl py-2 px-1 text-center text-xs text-white focus:outline-none focus:border-emerald-500" value="${hw.نحو || 0}">
-                      </div>
-                      <div>
-                        <label class="block text-[9px] text-gray-400 mb-1">واجب النصوص</label>
-                        <input type="number" onchange="updateDailyQuiz('${s.id}', '${targetDate}', 'نصوص', this.value)" class="w-full bg-[#141416] border border-gray-800 rounded-xl py-2 px-1 text-center text-xs text-white focus:outline-none focus:border-emerald-500" value="${hw.نصوص || 0}">
-                      </div>
-                      <div>
-                        <label class="block text-[9px] text-gray-400 mb-1">واجب الأدب</label>
-                        <input type="number" onchange="updateDailyQuiz('${s.id}', '${targetDate}', 'أدب', this.value)" class="w-full bg-[#141416] border border-gray-800 rounded-xl py-2 px-1 text-center text-xs text-white focus:outline-none focus:border-emerald-500" value="${hw.أدب || 0}">
-                      </div>
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      else if (activeTab === 'homework') {
-        container.innerHTML = `
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg flex flex-col gap-4">
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="ti ti-clipboard-list text-emerald-500"></i>
-              <span>تحديث التكليفات والمطلوب للحصة</span>
-            </h3>
-            <p class="text-xs text-gray-400">اكتب تفاصيل تكليف الواجب الجديد ليتم حفظه تلقائياً بالأرشيف ونشره لولي الأمر.</p>
-            <div>
-              <label class="block text-[10px] text-gray-400 mb-2">اختر تاريخ الحصة لتعديل تكليفها</label>
-              <select id="sel-hw-date" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 mb-3">
-                ${DB_EMULATOR.monthBlocks.map(b => `<option value="${b.date}">${b.date}</option>`).join('')}
-              </select>
-            </div>
-            <div>
-              <label class="block text-[10px] text-gray-400 mb-2">نص التكليف المطلوب بالتفصيل</label>
-              <textarea id="inp-new-hw" class="w-full bg-[#232329] border border-gray-800 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-emerald-500" rows="3" placeholder="مثال: مراجعة الوحدة الأولى بمذكرة النحو وحل التدريبات المذكورة..."></textarea>
-            </div>
-            <button onclick="addNewHomeworkTask()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-xs transition-all shadow-md shadow-emerald-500/10">
-              نشر وحفظ التكليف في الشيت
-            </button>
-          </div>
-        `;
-      }
-
-      else if (activeTab === 'child_status') {
-        const student = currentUser.student;
-        container.innerHTML = renderStudentView(student);
-      }
-    }
-
-    function renderStudentView(student) {
-      const totalSessions = Object.keys(student.attHistory).length;
-      const presentCount = Object.values(student.attHistory).filter(v => v === 1).length;
-      const attPct = totalSessions ? Math.round((presentCount / totalSessions) * 100) : 100;
-
-      let totalHwObtained = 0;
-      let totalHwMax = 0;
-      Object.values(student.hwHistory).forEach(h => {
-        totalHwObtained += ((Number(h.نحو) || 0) + (Number(h.نصوص) || 0) + (Number(h.أدب) || 0));
-        totalHwMax += 30;
-      });
-      const hwPct = totalHwMax ? Math.round((totalHwObtained / totalHwMax) * 100) : 80;
-
-      return `
-        <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold text-lg border border-emerald-500/20">
-            ${student.name[0]}
-          </div>
-          <div>
-            <h2 class="text-base font-bold text-white">${student.name}</h2>
-            <div class="text-[10px] text-emerald-400 font-bold mt-1 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block">كود الطالب: ${student.id}</div>
-          </div>
+            </main>
         </div>
+    </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 text-center shadow-lg">
-            <div class="text-[10px] text-gray-400 mb-1">معدل الحضور والالتزام</div>
-            <div class="text-xl font-bold text-white">${attPct}%</div>
-            <div class="text-[9px] text-gray-500 mt-1">حضر ${presentCount} من أصل ${totalSessions} حصة</div>
-          </div>
-          <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 text-center shadow-lg">
-            <div class="text-[10px] text-gray-400 mb-1">الموقف المالي للاشتراك</div>
-            <div class="text-xs font-bold py-1 px-3.5 rounded-xl inline-block mt-1 ${student.paid ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-500/15' : 'bg-amber-950/40 text-amber-500 border border-amber-500/15'}">
-              ${student.paid ? 'تم السداد' : 'معلق لم يسدد'}
-            </div>
-            <div class="text-[9px] text-gray-500 mt-2">قيمة الاشتراك: ${DB_EMULATOR.settings.price} ج.م</div>
-          </div>
-        </div>
-
-        <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-          <h3 class="text-xs font-bold text-white mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
-            <i class="ti ti-chart-donut text-emerald-500 text-base"></i>
-            <span>مستويات التحصيل الأكاديمي الحالية للابن</span>
-          </h3>
-          <div class="flex flex-col gap-4">
-            <div>
-              <div class="flex justify-between text-xs mb-1 text-gray-300">
-                <span>متوسط درجات الواجب اليومي</span>
-                <span class="font-bold text-emerald-400">${hwPct}%</span>
-              </div>
-              <div class="bg-[#232329] h-2 rounded-full overflow-hidden">
-                <div class="bg-emerald-500 h-full" style="width: ${hwPct}%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between text-xs mb-1 text-gray-300">
-                <span>اختبار المدرس الشهري</span>
-                <span class="font-bold text-blue-400">${student.examTeacher || 0} من 50</span>
-              </div>
-              <div class="bg-[#232329] h-2 rounded-full overflow-hidden">
-                <div class="bg-blue-500 h-full" style="width: ${((student.examTeacher || 0) / 50) * 100}%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between text-xs mb-1 text-gray-300">
-                <span>اختبار المدير (رقابة الإدارة)</span>
-                <span class="font-bold text-purple-400">${student.examManager || 0} من 50</span>
-              </div>
-              <div class="bg-[#232329] h-2 rounded-full overflow-hidden">
-                <div class="bg-purple-500 h-full" style="width: ${((student.examManager || 0) / 50) * 100}%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-emerald-950/20 border border-emerald-500/10 rounded-2xl p-4 shadow-lg">
-          <div class="flex items-center gap-2 mb-2 text-emerald-400">
-            <i class="ti ti-bookmark-filled text-base"></i>
-            <span class="text-xs font-bold">المطلوب والتكليف للمذاكرة بالحصة القادمة:</span>
-          </div>
-          <p class="text-xs text-gray-300 leading-relaxed">
-            ${DB_EMULATOR.monthBlocks[0] ? DB_EMULATOR.monthBlocks[0].task : 'لم يحدد التكليف بعد من الإدارة.'}
-          </p>
-        </div>
-      `;
-    }
-
-    async function updatePrice() {
-      const v = parseInt(document.getElementById('inp-new-price').value);
-      if (v > 0) {
-        DB_EMULATOR.settings.price = v;
-        showToast("جاري حفظ سعر الاشتراك في شيت جوجل...", "info");
-        await sendPostToSheet("updatePrice", { price: v });
-        showToast("تم تحديث وحفظ السعر بنجاح!", "success");
-        switchTab('prices');
-      } else {
-        showToast("يرجى إدخال قيمة صحيحة لمبلغ الاشتراك.", "error");
-      }
-    }
-
-    function confirmDeleteUser(username) {
-      showCustomModal({
-        title: "حذف حساب كادر",
-        message: `هل أنت متأكد من حذف الحساب "${username}" نهائياً من المؤسسة؟`,
-        confirmText: "حذف نهائي",
-        confirmColor: "bg-red-500 hover:bg-red-600",
-        onConfirm: async () => {
-          showToast("جاري حذف الحساب سحابياً...", "info");
-          const success = await sendPostToSheet("deleteUser", { username: username });
-          if (success) {
-            DB_EMULATOR.users = DB_EMULATOR.users.filter(u => u.username !== username);
-            showToast("تم حذف الحساب بنجاح وتحديث الشيت.", "success");
-            renderContent();
-          } else {
-            showToast("فشل الحذف الفعلي، جاري إزالته محلياً فقط مؤقتاً.", "info");
-            DB_EMULATOR.users = DB_EMULATOR.users.filter(u => u.username !== username);
-            renderContent();
-          }
-        }
-      });
-    }
-
-    function confirmDeleteStudent(studentName) {
-      showCustomModal({
-        title: "حذف طالب من المؤسسة",
-        message: `هل تريد إزالة الطالب "${studentName}" بالكامل؟ سيقوم الشيت بإعادة ترتيب بقية الطلاب أبجدياً تلقائياً.`,
-        confirmText: "تأكيد الحذف",
-        confirmColor: "bg-red-500 hover:bg-red-600",
-        onConfirm: async () => {
-          showToast("جاري الحذف السحابي...", "info");
-          const success = await sendPostToSheet("deleteStudent", { name: studentName });
-          if (success) {
-            showToast("تم الحذف بنجاح! جاري جلب القائمة المرتبة مجدداً...", "success");
-            await syncDataFromSheet();
-            renderContent();
-          } else {
-            DB_EMULATOR.students = DB_EMULATOR.students.filter(s => s.name !== studentName);
-            sortStudentsAlphabetically();
-            renderContent();
-            showToast("تم الحذف محلياً فقط.", "info");
-          }
-        }
-      });
-    }
-
-    async function updateDailyQuiz(stuId, date, key, val) {
-      const s = DB_EMULATOR.students.find(x => x.id === stuId);
-      if (s) {
-        if (!s.hwHistory[date]) s.hwHistory[date] = { نحو: 0, نصوص: 0, أدب: 0 };
-        s.hwHistory[date][key] = parseInt(val) || 0;
-        await sendPostToSheet("updateAttendance", { studentId: stuId, date: date, status: "حاضر", [key]: val });
-      }
-    }
-
-    async function updateManagerExam(stuId, val) {
-      const s = DB_EMULATOR.students.find(x => x.id === stuId);
-      if (s) {
-        s.examManager = parseInt(val) || 0;
-        await sendPostToSheet("updateGrades", { studentId: stuId, month: "يونيو 2026", examManager: val });
-      }
-    }
-
-    async function togglePaymentStatus(stuId, checkVal) {
-      const s = DB_EMULATOR.students.find(x => x.id === stuId);
-      if (s) {
-        s.paid = checkVal;
-        await sendPostToSheet("updatePayment", { studentId: stuId, month: "يونيو 2026", required: DB_EMULATOR.settings.price, status: checkVal ? "تم الدفع" : "معلق" });
-        showToast(`تم تحديث موقف دفع الاشتراك للطالب ${s.name}`, "success");
-        renderContent();
-      }
-    }
-
-    async function toggleDayAttendanceHistory(stuId, date) {
-      const s = DB_EMULATOR.students.find(x => x.id === stuId);
-      if (s) {
-        s.attHistory[date] = s.attHistory[date] === 1 ? 0 : 1;
-        await sendPostToSheet("updateAttendance", { studentId: stuId, date: date, status: s.attHistory[date] === 1 ? "حاضر" : "غائب" });
-        renderContent();
-      }
-    }
-
-    async function addNewHomeworkTask() {
-      const tDate = document.getElementById('sel-hw-date').value;
-      const tText = document.getElementById('inp-new-hw').value.trim();
-      if (tText) {
-        const targetBlock = DB_EMULATOR.monthBlocks.find(b => b.date === tDate);
-        if (targetBlock) {
-          targetBlock.task = tText;
-          showToast("جاري حفظ التكليف في قاعدة البيانات...", "info");
-          await sendPostToSheet("updateHomework", { date: tDate, material: "مؤسسة آية", task: tText });
-          showToast("تم تحديث الواجب بنجاح ونشره بصفحة ولي الأمر!", "success");
-          document.getElementById('inp-new-hw').value = '';
-          renderContent();
-        }
-      } else {
-        showToast("يرجى كتابة نص التكليف أولاً.", "error");
-      }
-    }
-
-    async function generateCustomMonth() {
-      const month = document.getElementById('sel-block-month').value;
-      const dates = [];
-      const d = new Date();
-      for (let i = 0; i < 28; i++) {
-        const temp = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
-        if (temp.getDay() === 1 || temp.getDay() === 3 || temp.getDay() === 6) {
-          dates.push(temp.toISOString().split('T')[0]);
-          if (dates.length >= 8) break;
-        }
-      }
-      showToast("جاري توليد حصص الشهر الجديد سحابياً...", "info");
-      await sendPostToSheet("generateMonth", { material: "مؤسسة آية", month: month, dates: dates });
-      showToast(`تم توليد 8 حصص لشهر ${month}!`, "success");
-      await syncDataFromSheet();
-    }
-
-    function viewStudentProfile(stuId) {
-      const s = DB_EMULATOR.students.find(x => x.id === stuId);
-      if (s) {
-        const container = document.getElementById('main-content');
-        container.innerHTML = `
-          <button onclick="switchTab('students')" class="bg-[#232329] text-gray-300 px-3.5 py-2.5 rounded-xl text-xs hover:text-white mb-2 inline-flex items-center gap-1 self-start border border-gray-800/60 active:scale-95 transition-all">
-            <i class="ti ti-arrow-right"></i>
-            <span>رجوع لكشف الطلاب</span>
-          </button>
-          ${renderStudentView(s)}
-        `;
-      }
-    }
-
-    function showCustomModal({ title, message, confirmText, confirmColor, onConfirm }) {
-      const container = document.getElementById('modal-container');
-      container.innerHTML = `
-        <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-3xl p-6 w-full max-w-sm flex flex-col gap-4 shadow-2xl transform scale-95 transition-all">
-          <div class="flex items-center gap-2 text-white border-b border-gray-800 pb-3">
-            <i class="ti ti-alert-triangle-filled text-amber-500 text-lg"></i>
-            <h3 class="text-sm font-bold">${title}</h3>
-          </div>
-          <p class="text-xs text-gray-300 leading-relaxed">${message}</p>
-          <div class="flex gap-2.5 mt-2">
-            <button id="modal-confirm-btn" class="flex-1 ${confirmColor} text-white py-3 rounded-2xl text-xs font-bold active:scale-95 transition-all shadow-lg">${confirmText}</button>
-            <button onclick="closeCustomModal()" class="flex-1 bg-[#232329] hover:bg-[#2b2b33] text-gray-300 py-3 rounded-2xl text-xs font-bold active:scale-95 border border-gray-800/60 transition-all">إلغاء</button>
-          </div>
-        </div>
-      `;
-      container.classList.remove('hidden');
-      container.classList.add('flex');
-      
-      document.getElementById('modal-confirm-btn').onclick = () => {
-        onConfirm();
-        closeCustomModal();
-      };
-    }
-
-    function closeCustomModal() {
-      const container = document.getElementById('modal-container');
-      container.classList.add('hidden');
-      container.classList.remove('flex');
-      container.innerHTML = '';
-    }
-
-    function showAddUserModal() {
-      const container = document.getElementById('modal-container');
-      container.innerHTML = `
-        <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-3xl p-6 w-full max-w-sm flex flex-col gap-4 shadow-2xl">
-          <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-1.5">
-            <i class="ti ti-user-plus text-emerald-500"></i>
-            <span>إضافة مستخدم جديد</span>
-          </h3>
-          <div>
-            <label class="block text-[10px] text-gray-400 mb-2">الاسم الكامل</label>
-            <input type="text" id="m-uname" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-          </div>
-          <div>
-            <label class="block text-[10px] text-gray-400 mb-2">رقم الموبايل</label>
-            <input type="text" id="m-uphone" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-          </div>
-          <div>
-            <label class="block text-[10px] text-gray-400 mb-2">الوظيفة / الصلاحية</label>
-            <select id="m-urole" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-              <option value="Admin">Admin (سكرتارية)</option>
-              <option value="Teacher">Teacher (مدرس)</option>
-              <option value="Manager">Manager (مدير)</option>
-              <option value="Owner">Owner (صاحب السنتر)</option>
-            </select>
-          </div>
-          <div class="flex gap-2.5 mt-2">
-            <button onclick="saveNewUser()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-2xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-emerald-500/10">إضافة وحفظ</button>
-            <button onclick="closeCustomModal()" class="flex-1 bg-[#232329] text-gray-300 py-3 rounded-2xl text-xs font-bold border border-gray-800/60">إلغاء</button>
-          </div>
-        </div>
-      `;
-      container.classList.remove('hidden');
-      container.classList.add('flex');
-    }
-
-    async function saveNewUser() {
-      const n = document.getElementById('m-uname').value.trim();
-      const p = document.getElementById('m-uphone').value.trim();
-      const r = document.getElementById('m-urole').value;
-
-      if (n && p) {
-        const userCode = n.split(' ')[0] + '_' + p.slice(-4);
-        const passCode = (n.split(' ')[0].slice(-3) || n.split(' ')[0]) + '_' + p.slice(4, 7);
-
-        const newUser = { name: n, phone: p, role: r, username: userCode, password: passCode };
-        DB_EMULATOR.users.push(newUser);
+    <script>
+        // الرابط الجديد الفعال الخاص بك لـ Google Sheets Web App
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbypeB4YcdcEfh5e-3dmJkYvvSxZjdNH-adYujVzo3kgiOg1ix0ZmrD4iHF0ibWlPv72/exec";
         
-        showToast("جاري حفظ حساب الموظف الجديد سحابياً...", "info");
-        await sendPostToSheet("addUser", newUser);
-        showToast("تم إنشاء وتأكيد الحساب بنجاح!", "success");
-        closeCustomModal();
-        switchTab('users');
-      } else {
-        showToast("يرجى ملء كافة الخانات المطلوبة.", "error");
-      }
-    }
+        let sessionUser = null;
+        let globalData = { Users: [], Students: [], Subjects: [], Sessions: [], ExamSchedules: [], AttendanceAndHomework: [], MonthlyExams: [] };
 
-    function showAddStudentModal() {
-      const container = document.getElementById('modal-container');
-      container.innerHTML = `
-        <div class="bg-[#1b1b1f] border border-gray-800/80 rounded-3xl p-6 w-full max-w-sm flex flex-col gap-4 shadow-2xl">
-          <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-1.5">
-            <i class="ti ti-school text-emerald-500"></i>
-            <span>تسجيل طالب جديد بالمؤسسة</span>
-          </h3>
-          <div>
-            <label class="block text-[10px] text-gray-400 mb-2">اسم الطالب الكامل</label>
-            <input type="text" id="m-sname" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-          </div>
-          <div>
-            <label class="block text-[10px] text-gray-400 mb-2">رقم هاتف الطالب</label>
-            <input type="text" id="m-sphone" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-          </div>
-          <div>
-            <label class="block text-[10px] text-gray-400 mb-2">رقم هاتف ولي الأمر (للمتابعة)</label>
-            <input type="text" id="m-spphone" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-          </div>
-          <div>
-            <label class="block text-[10px] text-gray-400 mb-2">المدرس المندوب</label>
-            <select id="m-steacher" class="w-full bg-[#232329] border border-gray-800 rounded-2xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-              <option value="أ. خالد عمر">أ. خالد عمر</option>
-              <option value="أ. منى سامي">أ. منى سامي</option>
-            </select>
-          </div>
-          <div class="flex gap-2.5 mt-2">
-            <button onclick="saveNewStudent()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-2xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-emerald-500/10">تسجيل وحفظ</button>
-            <button onclick="closeCustomModal()" class="flex-1 bg-[#232329] text-gray-300 py-3 rounded-2xl text-xs font-bold border border-gray-800/60">إلغاء</button>
-          </div>
-        </div>
-      `;
-      container.classList.remove('hidden');
-      container.classList.add('flex');
-    }
+        function showToast(msg, type = "success") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = `px-5 py-3 rounded-xl shadow-xl text-white text-sm font-medium transition-all duration-300 transform translate-x-0 flex items-center gap-2 ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'}`;
+            toast.innerHTML = `<i class="ti ${type === 'success' ? 'ti-circle-check' : 'ti-alert-circle'} text-lg"></i><span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 4000);
+        }
 
-    async function saveNewStudent() {
-      const n = document.getElementById('m-sname').value.trim();
-      const p = document.getElementById('m-sphone').value.trim();
-      const pp = document.getElementById('m-spphone').value.trim();
-      const t = document.getElementById('m-steacher').value;
+        async function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById("username").value.trim();
+            const p = document.getElementById("password").value.trim();
+            
+            showToast("جاري التحقق من الصلاحيات السحابية...", "success");
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'login', username: u, password: p })
+                });
+                const result = await response.json();
+                if(result.success) {
+                    sessionUser = result.data;
+                    document.getElementById("login-screen").classList.add("hidden");
+                    document.getElementById("main-dashboard").classList.remove("hidden");
+                    document.getElementById("user-display-name").innerText = sessionUser.username;
+                    document.getElementById("user-role-name").innerText = sessionUser.role;
+                    showToast("تم تسجيل الدخول بنجاح كـ " + sessionUser.role, "success");
+                    await refreshData();
+                    buildSidebar();
+                    loadDefaultTab();
+                } else {
+                    showToast(result.msg, "error");
+                }
+            } catch(err) {
+                showToast("فشل الاتصال بـ Google Web App المباشر", "error");
+            }
+        }
 
-      if (n && p) {
-        const tempStudent = { name: n, phone: p, parentPhone: pp, teacher: t };
+        async function refreshData() {
+            try {
+                const res = await fetch(`${WEB_APP_URL}?action=fetchAll`);
+                const json = await res.json();
+                if(json.success) {
+                    globalData = json.data;
+                }
+            } catch(e) {
+                showToast("خطأ أثناء الاتصال السحابي بتحديثات الشيت", "error");
+            }
+        }
 
-        showToast("جاري تسجيل الطالب سحابياً...", "info");
-        await sendPostToSheet("addStudent", tempStudent);
-        showToast("تم إدخال الطالب بنجاح! جاري تحديث القائمة والترتيب الأبجدي...", "success");
-        closeCustomModal();
-        await syncDataFromSheet();
-        switchTab('students');
-      } else {
-        showToast("يرجى ملء كافة الخانات المطلوبة.", "error");
-      }
-    }
+        function logout() {
+            sessionUser = null;
+            document.getElementById("main-dashboard").classList.add("hidden");
+            document.getElementById("login-screen").classList.remove("hidden");
+            document.getElementById("login-form").reset();
+        }
 
-    window.onload = function() {
-      syncDataFromSheet();
-    };
-  </script>
+        // هندسة التنقل والصلاحيات الكاملة لمؤسسة آية
+        function buildSidebar() {
+            const menu = document.getElementById("sidebar-menu");
+            menu.innerHTML = "";
+            const role = sessionUser.role;
+
+            const tabs = [
+                { id: "overview", name: "لوحة المتابعة الإجمالية", icon: "ti-dashboard", roles: ["Owner", "IT Manager", "Admin", "Manager"] },
+                { id: "users", name: "إدارة الحسابات والموظفين", icon: "ti-users", roles: ["IT Manager", "Admin"] },
+                { id: "students", name: "كشوف الطلاب والماليات", icon: "ti-school", roles: ["Owner", "IT Manager", "Admin", "Manager", "Teacher"] },
+                { id: "subjects", name: "إدارة المواد والدرجات الكبرى", icon: "ti-book", roles: ["Owner", "IT Manager", "Admin"] },
+                { id: "sessions", name: "أيام الحضور والجدول", icon: "ti-calendar-event", roles: ["Owner", "IT Manager", "Admin", "Teacher"] },
+                { id: "exams", name: "الامتحانات وشؤون التقييم", icon: "ti-report-analytics", roles: ["Owner", "IT Manager", "Admin", "Manager", "Teacher"] },
+                { id: "parent-portal", name: "بوابة ولي الأمر الاستعلامية", icon: "ti-user-circle", roles: ["Parent", "IT Manager", "Owner"] }
+            ];
+
+            tabs.forEach(tab => {
+                if(tab.roles.includes(role)) {
+                    const btn = document.createElement("button");
+                    btn.className = "w-full text-right px-4 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-700/50 hover:text-white transition flex items-center gap-3 mb-1";
+                    btn.innerHTML = `<i class="ti ${tab.icon} text-lg"></i><span>${tab.name}</span>`;
+                    btn.onclick = () => switchTab(tab.id);
+                    menu.appendChild(btn);
+                }
+            });
+        }
+
+        function loadDefaultTab() {
+            if(sessionUser.role === "Parent") {
+                switchTab("parent-portal");
+            } else {
+                switchTab("overview");
+            }
+        }
+
+        async function switchTab(tabId) {
+            const content = document.getElementById("tab-content");
+            content.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-24 text-slate-400 space-y-4">
+                    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brandAccent"></div>
+                    <p class="text-sm">جاري مزامنة وتجهيز البيانات طبقاً لمستوى صلاحيتك الفعلي...</p>
+                </div>`;
+            
+            await refreshData();
+            const isReadOnly = (sessionUser.role === "Owner");
+
+            if(tabId === "overview") {
+                const totalStu = globalData.Students.length;
+                const paidCount = globalData.Students.filter(s => s.FinancialStatus === "مدفوع الاشتراك").length;
+                const unpaidCount = totalStu - paidCount;
+
+                content.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-4 text-white">تحليل أداء مؤسسة آية الإجمالي</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-cardBg p-6 rounded-2xl border border-slate-700">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-slate-400 text-sm">إجمالي الطلاب المسجلين</span>
+                                <i class="ti ti-users text-xl text-brandAccent"></i>
+                            </div>
+                            <p class="text-3xl font-bold text-white mt-1">${totalStu} طالب</p>
+                        </div>
+                        <div class="bg-cardBg p-6 rounded-2xl border border-slate-700">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-slate-400 text-sm">الحسابات السحابية النشطة</span>
+                                <i class="ti ti-key text-xl text-emerald-400"></i>
+                            </div>
+                            <p class="text-3xl font-bold text-white mt-1">${globalData.Users.length} مستخدم</p>
+                        </div>
+                        <div class="bg-cardBg p-6 rounded-2xl border border-slate-700">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-slate-400 text-sm">عدد المواد والبرامج</span>
+                                <i class="ti ti-archive text-xl text-amber-400"></i>
+                            </div>
+                            <p class="text-3xl font-bold text-white mt-1">${globalData.Subjects.length} تخصصات</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-cardBg p-6 rounded-2xl border border-slate-700">
+                        <h4 class="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
+                            <i class="ti ti-chart-pie text-brandAccent"></i>
+                            <span>كشف التحصيل والموقف المالي للمؤسسة</span>
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>الطلاب المسددين للاشتراك</span>
+                                    <span>${paidCount} من ${totalStu}</span>
+                                </div>
+                                <div class="bg-darkBg h-3 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-500 h-full" style="width: ${totalStu ? (paidCount/totalStu)*100 : 0}%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>المبالغ المعلقة والاشتراكات المتأخرة</span>
+                                    <span>${unpaidCount} من ${totalStu}</span>
+                                </div>
+                                <div class="bg-darkBg h-3 rounded-full overflow-hidden">
+                                    <div class="bg-rose-500 h-full" style="width: ${totalStu ? (unpaidCount/totalStu)*100 : 0}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if(tabId === "users") {
+                let formHTML = "";
+                if(!isReadOnly) {
+                    formHTML = `
+                        <div class="bg-cardBg p-6 rounded-2xl border border-slate-700 mb-6">
+                            <h4 class="text-lg font-bold mb-4 text-brandAccent flex items-center gap-2">
+                                <i class="ti ti-plus"></i>
+                                <span>إضافة حساب موظف جديد للمؤسسة</span>
+                            </h4>
+                            <form onsubmit="handleUserAction(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <input type="text" id="new-uname" placeholder="اسم المستخدم" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <input type="password" id="new-upass" placeholder="كلمة المرور" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <select id="new-urole" class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                    <option value="Admin">Admin (السكرتيرة)</option>
+                                    <option value="Manager">Manager (المدير)</option>
+                                    <option value="Teacher">Teacher (المعلم)</option>
+                                    <option value="Parent">Parent (ولي الأمر)</option>
+                                    ${sessionUser.role === 'IT Manager' ? '<option value="Owner">Owner</option><option value="IT Manager">IT Manager</option>' : ''}
+                                </select>
+                                <input type="text" id="new-usub" placeholder="المادة (للمعلم فقط)" class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white col-span-1">
+                                <button type="submit" class="bg-brandAccent hover:bg-brandHover py-2 rounded-xl text-white font-bold transition col-span-4 flex items-center justify-center gap-2">
+                                    <i class="ti ti-device-floppy"></i>
+                                    <span>حفظ وتفعيل الحساب</span>
+                                </button>
+                            </form>
+                        </div>
+                    `;
+                }
+                
+                let tableRows = globalData.Users.map(u => {
+                    let deleteBtn = "";
+                    if(!isReadOnly && u.Role !== 'Owner' && u.Role !== 'IT Manager') {
+                        deleteBtn = `<button onclick="confirmDeleteUser('${u.Username}')" class="text-rose-400 hover:text-rose-600 font-bold flex items-center gap-1 justify-center mx-auto"><i class="ti ti-trash"></i><span>حذف</span></button>`;
+                    }
+                    return `
+                        <tr class="border-b border-slate-700/50">
+                            <td class="p-3 text-slate-200 font-semibold">${u.Username}</td>
+                            <td class="p-3 text-emerald-400 font-bold">${u.Role}</td>
+                            <td class="p-3 text-slate-400">${u.Subject || '-'}</td>
+                            <td class="p-3 text-center">${deleteBtn || '-'}</td>
+                        </tr>
+                    `;
+                }).join("");
+
+                content.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-4 text-white">إدارة حسابات وصلاحيات موظفي مؤسسة آية</h3>
+                    ${formHTML}
+                    <div class="bg-cardBg rounded-2xl border border-slate-700 overflow-hidden">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800 text-slate-300 border-b border-slate-700">
+                                    <th class="p-3">اسم المستخدم</th>
+                                    <th class="p-3">الصلاحية السحابية</th>
+                                    <th class="p-3">المادة / التخصص</th>
+                                    <th class="p-3 text-center">التحكم</th>
+                                </tr>
+                            </thead>
+                            <tbody>${tableRows}</tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            if(tabId === "students") {
+                let formHTML = "";
+                if(sessionUser.role === "Admin" || sessionUser.role === "IT Manager") {
+                    formHTML = `
+                        <div class="bg-cardBg p-6 rounded-2xl border border-slate-700 mb-6">
+                            <h4 class="text-lg font-bold mb-4 text-brandAccent flex items-center gap-2">
+                                <i class="ti ti-user-plus"></i>
+                                <span>تسجيل طالب جديد بالمنظومة</span>
+                            </h4>
+                            <form onsubmit="handleStudentAction(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <input type="text" id="s-name" placeholder="اسم الطالب بالكامل" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <input type="text" id="s-phone" placeholder="رقم هاتف الطالب" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <input type="text" id="s-pphone" placeholder="رقم هاتف ولي الأمر" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <input type="text" id="s-group" placeholder="المجموعة الدراسية (المعلمة)" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <select id="s-fin" class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white col-span-2">
+                                    <option value="مدفوع الاشتراك">مدفوع الاشتراك</option>
+                                    <option value="غير مدفوع">غير مدفوع</option>
+                                </select>
+                                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 py-2 rounded-xl text-white font-bold transition col-span-2 flex items-center justify-center gap-2">
+                                    <i class="ti ti-circle-plus"></i>
+                                    <span>حفظ بيانات الطالب</span>
+                                </button>
+                            </form>
+                        </div>
+                    `;
+                }
+
+                // فلترة الطلاب للمعلمة لترى فقط مجموعتها
+                let filteredStudents = globalData.Students;
+                if(sessionUser.role === "Teacher") {
+                    filteredStudents = globalData.Students.filter(s => s.Group === sessionUser.subject);
+                }
+
+                let rows = filteredStudents.map(s => {
+                    let actions = "";
+                    if(sessionUser.role === "Admin" || sessionUser.role === "IT Manager") {
+                        actions = `
+                            <button onclick="toggleFinancial('${s.StudentID}', '${s.FinancialStatus === 'مدفوع الاشتراك' ? 'غير مدفوع' : 'مدفوع الاشتراك'}')" class="text-amber-400 hover:underline ml-4 flex items-center gap-1 inline-flex"><i class="ti ti-cash"></i><span>تعديل السداد</span></button>
+                            <button onclick="confirmDeleteStudent('${s.StudentID}')" class="text-rose-400 hover:underline flex items-center gap-1 inline-flex"><i class="ti ti-trash"></i><span>حذف</span></button>
+                        `;
+                    }
+                    return `
+                        <tr class="border-b border-slate-700/50">
+                            <td class="p-3 text-slate-300 font-mono text-xs">${s.StudentID}</td>
+                            <td class="p-3 font-bold text-white">${s.Name}</td>
+                            <td class="p-3 text-slate-400 text-sm">${s.Phone}</td>
+                            <td class="p-3 text-slate-400 text-sm">${s.Group}</td>
+                            <td class="p-3"><span class="px-2 py-1 rounded-lg text-xs font-bold ${s.FinancialStatus === 'مدفوع الاشتراك' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}">${s.FinancialStatus}</span></td>
+                            <td class="p-3 text-center">${actions || '-'}</td>
+                        </tr>
+                    `;
+                }).join("");
+
+                content.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-4 text-white">كشوف الطلاب والمواقف المالية</h3>
+                    ${formHTML}
+                    <div class="bg-cardBg rounded-2xl border border-slate-700 overflow-hidden">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800 text-slate-300 border-b border-slate-700">
+                                    <th class="p-3">كود الطالب</th>
+                                    <th class="p-3">الاسم الكامل</th>
+                                    <th class="p-3">رقم الهاتف</th>
+                                    <th class="p-3">مجموعة / معلمة</th>
+                                    <th class="p-3">حالة الاشتراك المالي</th>
+                                    <th class="p-3 text-center">التحكم</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rows || '<tr><td colspan="6" class="text-center py-6 text-slate-400">لا يوجد طلاب مسجلين حالياً.</td></tr>'}</tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            if(tabId === "subjects") {
+                let formHTML = "";
+                if(!isReadOnly && (sessionUser.role === "Admin" || sessionUser.role === "IT Manager")) {
+                    formHTML = `
+                        <div class="bg-cardBg p-6 rounded-2xl border border-slate-700 mb-6">
+                            <h4 class="text-lg font-bold mb-4 text-brandAccent flex items-center gap-2">
+                                <i class="ti ti-book-plus"></i>
+                                <span>إضافة مادة تعليمية جديدة وتحديد درجاتها الكبرى</span>
+                            </h4>
+                            <form onsubmit="handleSubjectAction(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <input type="text" id="sub-name" placeholder="اسم المادة العلمية" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <input type="number" id="sub-maxhw" placeholder="عظمى الواجب اليومي" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <input type="number" id="sub-maxt" placeholder="عظمى اختبار المعلمة" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <input type="number" id="sub-maxm" placeholder="عظمى اختبار الإدارة" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <button type="submit" class="bg-brandAccent hover:bg-brandHover py-2 rounded-xl text-white font-bold transition col-span-4 flex items-center justify-center gap-2">
+                                    <i class="ti ti-circle-plus"></i>
+                                    <span>إدراج المادة بالمنظومة</span>
+                                </button>
+                            </form>
+                        </div>
+                    `;
+                }
+
+                let rows = globalData.Subjects.map(sub => `
+                    <tr class="border-b border-slate-700/50">
+                        <td class="p-3 font-bold text-white">${sub.SubjectName}</td>
+                        <td class="p-3 text-amber-400 font-mono font-bold">${sub.MaxHomeworkGrade}</td>
+                        <td class="p-3 text-emerald-400 font-mono font-bold">${sub.MaxTeacherExamGrade}</td>
+                        <td class="p-3 text-brandAccent font-mono font-bold">${sub.MaxManagerExamGrade}</td>
+                    </tr>
+                `).join("");
+
+                content.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-4 text-white">المواد الأكاديمية ونظام التقييم</h3>
+                    ${formHTML}
+                    <div class="bg-cardBg rounded-2xl border border-slate-700 overflow-hidden">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800 text-slate-300 border-b border-slate-700">
+                                    <th class="p-3">اسم المادة</th>
+                                    <th class="p-3">النهاية العظمى للواجب</th>
+                                    <th class="p-3">العظمى لاختبار المعلمة</th>
+                                    <th class="p-3">العظمى لاختبار الإدارة (المدير)</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rows || '<tr><td colspan="4" class="text-center py-6 text-slate-400">لا توجد مواد مدرجة بالسنتر حالياً.</td></tr>'}</tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            if(tabId === "sessions") {
+                let formHTML = "";
+                if(sessionUser.role === "Admin" || sessionUser.role === "IT Manager") {
+                    formHTML = `
+                        <div class="bg-cardBg p-6 rounded-2xl border border-slate-700 mb-6">
+                            <h4 class="text-lg font-bold mb-4 text-brandAccent flex items-center gap-2">
+                                <i class="ti ti-calendar-plus"></i>
+                                <span>جدولة وتوليد يوم حضور وتكليف جديد</span>
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-4">عند توليد الحصة تظهر فوراً لكل المجموعات الدراسية وتكون مطالبة برصد الغياب والواجب اليومي.</p>
+                            <form onsubmit="handleSessionAction(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input type="date" id="sess-date" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <input type="text" id="sess-task" placeholder="التكليف / الواجب المطلوب للحصة" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white">
+                                <button type="submit" class="bg-brandAccent hover:bg-brandHover py-2 rounded-xl text-white font-bold transition flex items-center justify-center gap-2">
+                                    <i class="ti ti-plus"></i>
+                                    <span>إرسال الحصة</span>
+                                </button>
+                            </form>
+                        </div>
+                    `;
+                }
+
+                let listHTML = globalData.Sessions.map(sess => {
+                    let actionArea = "";
+                    if(sessionUser.role === "Teacher" || sessionUser.role === "IT Manager") {
+                        actionArea = `<button onclick="openAttendanceModal('${sess.SessionID}', '${sess.RequiredTask}')" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-emerald-700 transition flex items-center gap-1"><i class="ti ti-pencil"></i><span>رصد الحضور والواجب</span></button>`;
+                    }
+                    return `
+                        <div class="bg-cardBg p-4 rounded-xl border border-slate-700/70 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <p class="text-sm font-bold text-white flex items-center gap-2">
+                                    <i class="ti ti-calendar text-brandAccent"></i>
+                                    <span>تاريخ الحصة: ${sess.Date}</span>
+                                </p>
+                                <p class="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                                    <span class="font-semibold text-amber-400">التكليف المطلوب:</span>
+                                    <span>${sess.RequiredTask}</span>
+                                </p>
+                            </div>
+                            <div>${actionArea}</div>
+                        </div>
+                    `;
+                }).join("");
+
+                content.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-4 text-white">الحصص وجدول التكليفات اليومية</h3>
+                    ${formHTML}
+                    <div class="space-y-3">${listHTML || '<p class="text-slate-400 text-sm">لم يتم توليد أي أيام حضور حالياً من الإدارة.</p>'}</div>
+                `;
+            }
+
+            if(tabId === "exams") {
+                let adminScheduleHTML = "";
+                if(sessionUser.role === "Admin" || sessionUser.role === "IT Manager") {
+                    let teacherOptions = globalData.Users.filter(u => u.Role === "Teacher").map(t => `<option value="${t.Username}">${t.Username} (${t.Subject})</option>`).join("");
+                    adminScheduleHTML = `
+                        <div class="bg-cardBg p-6 rounded-2xl border border-slate-700 mb-6">
+                            <h4 class="text-lg font-bold mb-4 text-brandAccent flex items-center gap-2">
+                                <i class="ti ti-alarm"></i>
+                                <span>جدولة وتحديد مواعيد امتحانات الشهر المخصصة للمعلمات</span>
+                            </h4>
+                            <form onsubmit="handleScheduleExam(event)" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                                <div class="flex flex-col"><label class="text-xs text-slate-400 mb-1">المعلمة المستهدفة</label><select id="ex-teacher" class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white h-11">${teacherOptions}</select></div>
+                                <div class="flex flex-col"><label class="text-xs text-slate-400 mb-1">الشهر المستهدف</label><input type="text" id="ex-month" placeholder="يونيو 2026" required class="bg-darkBg border border-slate-600 rounded-xl px-4 py-2 text-white h-11"></div>
+                                <div class="flex flex-col"><label class="text-xs text-slate-400 mb-1">موعد امتحان المعلمة</label><input type="date" id="ex-tdate" required class="bg-darkBg border border-slate-600 rounded-xl px-3 py-1 text-white h-11"></div>
+                                <div class="flex flex-col"><label class="text-xs text-slate-400 mb-1">موعد امتحان الإدارة</label><input type="date" id="ex-mdate" required class="bg-darkBg border border-slate-600 rounded-xl px-3 py-1 text-white h-11"></div>
+                                <button type="submit" class="bg-brandAccent hover:bg-brandHover rounded-xl text-white font-bold transition self-end h-11 flex items-center justify-center gap-1"><i class="ti ti-device-floppy"></i><span>حفظ المواعيد</span></button>
+                            </form>
+                        </div>
+                    `;
+                }
+
+                // فلترة الطلاب لمعاينة ورصد درجات الامتحان الشهري
+                let filteredStudents = globalData.Students;
+                if(sessionUser.role === "Teacher") {
+                    filteredStudents = globalData.Students.filter(s => s.Group === sessionUser.subject);
+                }
+
+                let studentsGradesHTML = filteredStudents.map(st => {
+                    let examRec = globalData.MonthlyExams.find(ex => ex.StudentID === st.StudentID) || { TeacherExamGrade: '', ManagerExamGrade: '' };
+                    
+                    let teacherInputDisabled = !(sessionUser.role === "Teacher" || sessionUser.role === "IT Manager") ? "disabled" : "";
+                    let managerInputDisabled = !(sessionUser.role === "Manager" || sessionUser.role === "IT Manager") ? "disabled" : "";
+
+                    return `
+                        <tr class="border-b border-slate-700/50">
+                            <td class="p-3 text-slate-200 font-bold">${st.Name} <span class="text-xs text-slate-400">(${st.Group})</span></td>
+                            <td class="p-3">
+                                <input type="number" value="${examRec.TeacherExamGrade}" ${teacherInputDisabled} onchange="saveExamGrade('${st.StudentID}', 'teacher', this.value)" class="bg-darkBg border border-slate-600 rounded-lg px-2 py-1 w-28 text-center text-white font-mono font-bold focus:border-brandAccent focus:outline-none">
+                            </td>
+                            <td class="p-3">
+                                <input type="number" value="${examRec.ManagerExamGrade}" ${managerInputDisabled} onchange="saveExamGrade('${st.StudentID}', 'manager', this.value)" class="bg-darkBg border border-slate-600 rounded-lg px-2 py-1 w-28 text-center text-white font-mono font-bold focus:border-emerald-500 focus:outline-none">
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
+
+                content.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-4 text-white">الامتحانات الشهرية المعتمدة</h3>
+                    ${adminScheduleHTML}
+                    <div class="bg-cardBg p-6 rounded-2xl border border-slate-700">
+                        <h4 class="text-lg font-bold mb-2 text-slate-300">رصد وتقييم درجات امتحانات الشهر الحالي</h4>
+                        <p class="text-xs text-slate-400 mb-6">رصد الدرجات محمي ومؤمن؛ حيث تقوم المعلمة فقط بتعديل درجة "اختبار المعلم"، بينما يقوم المدير حصرياً برصد درجة "اختبار الإدارة الموحد".</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-right border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-800 text-slate-300 border-b border-slate-700">
+                                        <th class="p-3">اسم الطالب والمجموعة</th>
+                                        <th class="p-3">درجة اختبار المعلمة</th>
+                                        <th class="p-3">درجة اختبار الإدارة (المدير)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${studentsGradesHTML || '<tr><td colspan="3" class="text-center py-6 text-slate-400">لا يوجد طلاب متوافقين مع نطاق تخصصك حالياً.</td></tr>'}</tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if(tabId === "parent-portal") {
+                content.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-4 text-white">بوابة الاستعلام الفوري والمتابعة لأولياء الأمور</h3>
+                    <div class="bg-cardBg p-6 rounded-2xl border border-slate-700 max-w-xl">
+                        <h4 class="text-lg font-bold mb-4 text-brandAccent flex items-center gap-2">
+                            <i class="ti ti-search"></i>
+                            <span>استعلم عن السجل التعليمي والمالي لنجلك</span>
+                        </h4>
+                        <div class="flex gap-3 mb-6">
+                            <input type="text" id="parent-search-code" placeholder="أدخل كود الطالب يدوياً (مثال: STU...)" class="bg-darkBg border border-slate-600 rounded-xl px-4 py-3 flex-grow text-white focus:outline-none focus:border-brandAccent">
+                            <button onclick="handleParentSearch()" class="bg-brandAccent hover:bg-brandHover text-white px-6 py-3 rounded-xl font-bold transition flex items-center gap-1"><i class="ti ti-click"></i><span>عرض التقرير</span></button>
+                        </div>
+                        <div id="parent-result-area" class="space-y-4"></div>
+                    </div>
+                `;
+            }
+        }
+
+        // دوال الربط والإرسال السحابي المباشر لشيت جوجل
+        async function handleUserAction(e) {
+            e.preventDefault();
+            const uName = document.getElementById("new-uname").value.trim();
+            const uPass = document.getElementById("new-upass").value.trim();
+            const uRole = document.getElementById("new-urole").value;
+            const uSubj = document.getElementById("new-usub").value.trim();
+            
+            showToast("جاري إرسال وتأمين حساب المستخدم...", "success");
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'manageUser', subAction: 'add', uName, uPass, uRole, uSubj, uGroup: uSubj })
+            });
+            const res = await response.json();
+            if(res.success) { showToast("تم حفظ وتأمين الموظف بنجاح في الشيت"); switchTab("users"); }
+        }
+
+        function confirmDeleteUser(username) {
+            openConfirmModal("هل أنت متأكد من رغبتك في حذف هذا الحساب من المنظومة نهائياً؟", async () => {
+                showToast("جاري تنظيف وحذف الحساب...", "success");
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'manageUser', subAction: 'delete', uName: username })
+                });
+                const res = await response.json();
+                if(res.success) { showToast("تم حذف الحساب بالكامل من قواعد البيانات"); switchTab("users"); }
+            });
+        }
+
+        async function handleStudentAction(e) {
+            e.preventDefault();
+            const name = document.getElementById("s-name").value.trim();
+            const phone = document.getElementById("s-phone").value.trim();
+            const pPhone = document.getElementById("s-pphone").value.trim();
+            const group = document.getElementById("s-group").value.trim();
+            const finStatus = document.getElementById("s-fin").value;
+
+            showToast("جاري تسجيل وإدراج الطالب سحابياً...", "success");
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'saveStudent', name, phone, pPhone, group, finStatus, notes: '' })
+            });
+            const res = await response.json();
+            if(res.success) { showToast("تم تسجيل الطالب بنجاح وتوليد كوده تلقائياً"); switchTab("students"); }
+        }
+
+        function confirmDeleteStudent(id) {
+            openConfirmModal("هل أنت متأكد من رغبتك في حذف هذا الطالب وحذف كشف درجاته بالكامل؟", async () => {
+                showToast("جاري حذف كشف الطالب نهائياً من الشيت...", "success");
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'deleteStudent', id })
+                });
+                const res = await response.json();
+                if(res.success) { showToast("تم حذف ملفات الطالب وحصصه بالكامل من السجلات"); switchTab("students"); }
+            });
+        }
+
+        async function toggleFinancial(id, newStatus) {
+            showToast("جاري تعديل الحالة المالية للطالب...", "success");
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'updateFinancial', id, status: newStatus })
+            });
+            const res = await response.json();
+            if(res.success) { showToast("تم تعديل الوضع المالي بنجاح"); switchTab("students"); }
+        }
+
+        async function handleSubjectAction(e) {
+            e.preventDefault();
+            const name = document.getElementById("sub-name").value.trim();
+            const maxHW = document.getElementById("sub-maxhw").value;
+            const maxTeach = document.getElementById("sub-maxt").value;
+            const maxMgr = document.getElementById("sub-maxm").value;
+
+            showToast("جاري إدراج المادة بالمنظومة...", "success");
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'addSubject', name, maxHW, maxTeach, maxMgr })
+            });
+            const res = await response.json();
+            if(res.success) { showToast("تم إدراج المادة والدرجات العظمى بنجاح"); switchTab("subjects"); }
+        }
+
+        async function handleSessionAction(e) {
+            e.preventDefault();
+            const date = document.getElementById("sess-date").value;
+            const task = document.getElementById("sess-task").value.trim();
+
+            showToast("جاري تعميم الحصة التكليفية السحابية...", "success");
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'addSession', date, task })
+            });
+            const res = await response.json();
+            if(res.success) { showToast("تم توليد الحصة بنجاح وجعل التكليف مطلوباً"); switchTab("sessions"); }
+        }
+
+        async function handleScheduleExam(e) {
+            e.preventDefault();
+            const teacher = document.getElementById("ex-teacher").value;
+            const month = document.getElementById("ex-month").value.trim();
+            const tDate = document.getElementById("ex-tdate").value;
+            const mDate = document.getElementById("ex-mdate").value;
+
+            showToast("جاري حفظ وتوزيع مواعيد الامتحانات الشهرية...", "success");
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'scheduleExam', teacher, month, tDate, mDate })
+            });
+            const res = await response.json();
+            if(res.success) { showToast("تم حفظ جدول المواعيد بنجاح للمعلمة المستهدفة"); switchTab("exams"); }
+        }
+
+        async function saveExamGrade(studentId, type, grade) {
+            showToast("جاري مزامنة درجة الاختبار الشهرية...", "success");
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'submitExamGrade', studentId, type, grade, month: 'يونيو 2026', subj: 'مؤسسة آية' })
+            });
+            const res = await response.json();
+            if(res.success) showToast("تم مزامنة الدرجة وحفظ الموقف الأكاديمي بالطالب بنجاح");
+        }
+
+        // مودال تفاعلي لرصد الغياب والواجب كبديل متطور عن الأليرت
+        function openAttendanceModal(sessionId, requiredTask) {
+            const backdrop = document.createElement("div");
+            backdrop.className = "fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50";
+            backdrop.id = "attendance-modal";
+
+            let studentsRows = globalData.Students.map(st => `
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 p-3 bg-darkBg rounded-xl border border-slate-700 mb-2">
+                    <span class="font-bold text-white text-sm">${st.Name} <span class="text-slate-400 font-normal text-xs">(${st.Group})</span></span>
+                    <div class="flex items-center gap-4 flex-wrap w-full md:w-auto">
+                        <select data-sid="${st.StudentID}" class="attendance-status bg-cardBg border border-slate-600 rounded-lg text-white px-2 py-1.5 text-xs">
+                            <option value="حضور">حضور</option>
+                            <option value="غياب">غياب</option>
+                            <option value="إجازة عذر">إجازة عذر</option>
+                        </select>
+                        <input type="number" placeholder="درجة الواجب" data-sid="${st.StudentID}" class="homework-grade bg-cardBg border border-slate-600 rounded-lg text-center text-white px-2 py-1.5 text-xs w-24">
+                        <input type="text" placeholder="ملاحظة المعلمة" data-sid="${st.StudentID}" class="teacher-notes bg-cardBg border border-slate-600 rounded-lg text-white px-2 py-1.5 text-xs w-32">
+                    </div>
+                </div>
+            `).join("");
+
+            backdrop.innerHTML = `
+                <div class="bg-cardBg rounded-2xl border border-slate-700 w-full max-w-2xl p-6 flex flex-col max-h-[85vh]">
+                    <h4 class="text-xl font-bold text-brandAccent flex items-center gap-2 mb-1">
+                        <i class="ti ti-edit"></i>
+                        <span>رصد الغياب والواجب اليومي</span>
+                    </h4>
+                    <p class="text-xs text-slate-400 mb-4">التكليف المطلوب: <span class="text-slate-200 font-semibold">${requiredTask}</span></p>
+                    <div class="flex-grow overflow-y-auto custom-scroll pr-1">${studentsRows || '<p class="text-slate-400 text-sm">لا يوجد طلاب مسجلين بالسنتر لرصدهم.</p>'}</div>
+                    <div class="mt-6 flex justify-end gap-3 border-t border-slate-700 pt-4">
+                        <button onclick="document.getElementById('attendance-modal').remove()" class="bg-slate-700 text-slate-200 px-5 py-2 rounded-xl text-sm font-medium transition">إلغاء</button>
+                        <button onclick="submitAttendanceData('${sessionId}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl text-sm font-bold transition">حفظ السجلات بالكامل</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(backdrop);
+        }
+
+        async function submitAttendanceData(sessionId) {
+            const statuses = document.querySelectorAll(".attendance-status");
+            const records = [];
+            
+            statuses.forEach(el => {
+                const sId = el.getAttribute("data-sid");
+                const hwEl = document.querySelector(`.homework-grade[data-sid="${sId}"]`);
+                const noteEl = document.querySelector(`.teacher-notes[data-sid="${sId}"]`);
+                records.push({
+                    studentId: sId,
+                    status: el.value,
+                    hwGrade: hwEl ? hwEl.value : '',
+                    notes: noteEl ? noteEl.value : ''
+                });
+            });
+
+            showToast("جاري إرسال ومزامنة السجلات بالكامل سحابياً...", "success");
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'rصدAttendance', sessionId, records })
+            });
+            const res = await response.json();
+            if(res.success) {
+                showToast("تم تحديث ورصد الحضور والواجب اليومي بنجاح");
+                document.getElementById("attendance-modal").remove();
+                switchTab("sessions");
+            }
+        }
+
+        function handleParentSearch() {
+            const code = document.getElementById("parent-search-code").value.trim();
+            const targetArea = document.getElementById("parent-result-area");
+            targetArea.innerHTML = "";
+
+            const student = globalData.Students.find(st => st.StudentID === code);
+            if(!student) {
+                targetArea.innerHTML = `<p class="text-rose-400 text-sm font-medium flex items-center gap-1"><i class="ti ti-alert-circle"></i><span>عذراً، كود الطالب غير صحيح أو لم يدرج بالمنظومة بعد.</span></p>`;
+                return;
+            }
+
+            const attendanceRecords = globalData.AttendanceAndHomework.filter(rec => rec.StudentID === code);
+            const examRecords = globalData.MonthlyExams.filter(rec => rec.StudentID === code);
+
+            let attendanceHTML = attendanceRecords.map(r => `
+                <div class="flex justify-between items-center bg-darkBg p-2 rounded-lg text-xs border border-slate-700">
+                    <span class="text-slate-400 flex items-center gap-1"><i class="ti ti-clock"></i><span>حصة: ${r.SessionID}</span></span>
+                    <span class="${r.Status === 'حضور' ? 'text-emerald-400' : 'text-rose-400'} font-bold">${r.Status}</span>
+                    <span class="text-amber-400 font-bold">الواجب: ${r.HomeworkGrade || '0'}</span>
+                </div>
+            `).join("");
+
+            let examsHTML = examRecords.map(ex => `
+                <div class="bg-darkBg p-3 rounded-lg border border-slate-700 text-xs space-y-1">
+                    <p class="font-bold text-white flex items-center gap-1"><i class="ti ti-calendar"></i><span>دورة الشهر: ${ex.MonthBlock}</span></p>
+                    <p class="text-emerald-400 font-bold">اختبار المعلمة: ${ex.TeacherExamGrade || 'لم يرصد بعد'}</p>
+                    <p class="text-brandAccent font-bold">اختبار الإدارة: ${ex.ManagerExamGrade || 'لم يرصد بعد'}</p>
+                </div>
+            `).join("");
+
+            targetArea.innerHTML = `
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-600/40 space-y-3">
+                    <p class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="ti ti-id-badge text-brandAccent text-lg"></i>
+                        <span>الطالب: ${student.Name}</span>
+                    </p>
+                    <p class="text-xs text-slate-300">المجموعة: ${student.Group} | الموقف المالي: <span class="font-bold text-emerald-400">${student.FinancialStatus}</span></p>
+                    
+                    <div class="border-t border-slate-700 pt-3">
+                        <p class="text-xs font-bold text-slate-400 mb-2">سجل التقييم والواجب اليومي:</p>
+                        <div class="space-y-1 max-h-36 overflow-y-auto custom-scroll">${attendanceHTML || '<p class="text-slate-500 text-xs">لا توجد سجلات رصدت بعد.</p>'}</div>
+                    </div>
+                    <div class="border-t border-slate-700 pt-3">
+                        <p class="text-xs font-bold text-slate-400 mb-2">نتائج امتحانات الشهر المعتمدة:</p>
+                        <div class="space-y-2">${examsHTML || '<p class="text-slate-500 text-xs">لم تسجل اختبارات هذا الشهر حتى الآن.</p>'}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // مودال مخصص للتأكيد على الإجراءات الهامة والخطرة
+        function openConfirmModal(message, confirmCallback) {
+            const backdrop = document.createElement("div");
+            backdrop.className = "fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50";
+            backdrop.id = "confirm-modal";
+
+            backdrop.innerHTML = `
+                <div class="bg-cardBg rounded-2xl border border-slate-700 w-full max-w-sm p-6 flex flex-col items-center text-center">
+                    <div class="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center mb-4">
+                        <i class="ti ti-trash text-2xl"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-white mb-2">تحذير أمني هام</h4>
+                    <p class="text-xs text-slate-400 mb-6 leading-relaxed">${message}</p>
+                    <div class="flex gap-3 w-full">
+                        <button onclick="document.getElementById('confirm-modal').remove()" class="flex-1 bg-slate-700 text-slate-200 py-2 rounded-xl text-xs font-medium transition">تراجع</button>
+                        <button id="confirm-modal-ok" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-xl text-xs font-bold transition">نعم، تأكيد الحذف</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(backdrop);
+            document.getElementById("confirm-modal-ok").onclick = () => {
+                confirmCallback();
+                document.getElementById("confirm-modal").remove();
+            };
+        }
+    </script>
 </body>
 </html>
